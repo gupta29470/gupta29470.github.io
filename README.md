@@ -36,35 +36,35 @@ There is no `CNAME` file. Adding a custom domain means adding it to `public/` an
 
 The design language is print-derived: one warm paper (`#F5F2EB`), one ink (`#141414`), and a
 single red (`#D93B2B`) that is only ever used for the one thing that matters on a given
-surface — a hovered index number, an interrupted voice turn, a full stop. Type is Archivo for
+surface: a hovered index number, an interrupted voice turn, a full stop. Type is Archivo for
 display, Source Serif 4 for reading, IBM Plex Mono for metadata. Structure is carried by
 hairline rules and a 12-column grid instead of cards, shadows and rounded corners.
 
-It is a deliberate borrowing of the **editorial register** — numbered entries, context /
+It is a deliberate borrowing of the **editorial register**: numbered entries, context /
 approach / outcome, a colophon on every project — not of anyone's copy, content, or code.
 
 ## Where the content lives
 
 `src/content/work.ts` is the only place text and figures are written. It carries its own
-provenance rules at the top:
+provenance rules at the top, and a "deliberately not claimed" list at the bottom:
 
-- Every number is copied from Aakash's own resume files. Nothing is estimated or rounded up.
-- **Codewalk is deliberately absent.** It is not a project card, and no Codewalk repository
-  link appears anywhere.
+- Every number was read out of the repository or the resume, not remembered.
 - **The phone number is deliberately absent**, although it is on both resume files.
-- Claims that are properties rather than metrics ("zero third-party dependencies") are quoted
-  as the resume states them.
+- **The two native iOS projects are deliberately absent**, by request.
+- Three claims from the AI resume are **left off rather than softened**, because they do not
+  survive checking against `codewalk-prod`: the MCP server and its 39 tools (no MCP module
+  exists in `codewalk-platform/app/modules/`), "15+ languages" (`parsing/parser.py` registers
+  14), and "7 providers" (`llm_gateway/providers.py` lists 13).
 
 Anyone adding a project should add it there; the sections render from the data and hold no
 copy of their own.
 
 ## The plates
 
-`src/components/plates.tsx` holds four hand-drawn SVG schematics — one per project. They are
+`src/components/plates.tsx` holds two hand-drawn SVG schematics, one per project. They are
 diagrams of real system components and real data paths, not fabricated screenshots. Each keeps
-a single red element marking the decision that made the project worth building: the barge-in
-path in VoiceFlow, the deterministic lookup lane in EcomBot, the CloudKit reconciliation in
-Local First Notes, the typed route in Marketplace.
+a single red element marking the decision that made the project worth building: the ranking
+call that is the only filter in Codewalk's retrieval, and the barge-in path in VoiceFlow.
 
 ## Structure
 
@@ -73,30 +73,35 @@ src/
 ├── app/
 │   ├── layout.tsx        fonts, metadata, JSON-LD
 │   ├── page.tsx          all sections, in order
-│   └── globals.css       design tokens, .meta, .display, press grain
+│   └── globals.css       design tokens, .meta, .display, press grain, sheet keyframes
 ├── components/
-│   ├── masthead.tsx      sticky nav + IST desk clock
-│   ├── work-index.tsx    the register and the Issue overlay
-│   ├── plates.tsx        four schematic diagrams
-│   ├── archive.tsx       previous employment, behind <details>
-│   └── capability.tsx    six capability rows
+│   ├── masthead.tsx      sticky nav + IST clock
+│   ├── work-index.tsx    the register and the bottom sheet
+│   ├── plates.tsx        two schematic diagrams
+│   ├── experience.tsx    work experience, behind <details>
+│   └── ist-clock.tsx     client clock, filled on mount
 └── content/work.ts       every word and figure on the site
 public/resume/            the two resumes, served as-is
 ```
 
 ## Notes for whoever works on this next
 
-- The overlay is one horizontally scrolling container. On `lg` and up it scrolls sideways like
-  a spread; below that it stacks vertically. Arrow keys and Escape work on desktop, and it is
-  remounted per project so "next in the index" always lands on a cover.
-- All registers — the work index, the archive and the capabilities list — switch to their
-  multi-column layout at `lg`, not `md`. Between 768px and 1024px the columns are too narrow
-  for the display type, and the headings run straight over the body text. This was measured,
-  not guessed.
+- A project opens as a **bottom sheet with vertical scroll**. An earlier version was a
+  five-panel horizontal spread, which read badly on a phone and hid the fact that a project
+  had more than one panel. The sheet is remounted per project (via `key`), which is what resets
+  its scroll position to the top without a reset effect.
+- Rows that open say so. The archive rows used to end in a bare `+` and nobody could tell they
+  were interactive, so `experience.tsx` carries a labelled Expand control that flips to
+  Collapse with `group-open:`.
+- All registers switch to their multi-column layout at `lg`, not `md`. Between 768px and
+  1024px the columns are too narrow for the display type, and headings run over body text.
+  This was measured at 14 widths, not guessed.
 - Prose tracks are `minmax(0,1fr)` with `min-w-0` on the item. A grid item's default automatic
   minimum size will happily widen the whole page instead of wrapping a long summary.
 - One Tailwind v4 trap is worth knowing: `lg:inline` is emitted *after* `hidden`, so
   `hidden lg:inline` on the same element applies at every width. Put the breakpoint on the
   parent, or use a class whose utility is emitted after (as the index row does with
   `lg:hidden`).
-- Not initialized as a git repository on purpose — the owner asked for development only.
+- No em dash appears in any rendered string. The owner reads them as machine-written. The rule
+  is not enforced by a test, so it is on you.
+
