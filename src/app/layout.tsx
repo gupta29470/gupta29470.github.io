@@ -25,7 +25,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://aakashgupta.dev"),
+  metadataBase: new URL("https://gupta29470.github.io"),
   title: {
     default: "Aakash Gupta — Applied AI Engineer",
     template: "%s | Aakash Gupta",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "profile",
     locale: "en_IN",
-    url: "https://aakashgupta.dev",
+    url: "https://gupta29470.github.io",
     siteName: "Aakash Gupta",
     title: "Aakash Gupta — Applied AI Engineer",
     description:
