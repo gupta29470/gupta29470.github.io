@@ -41,8 +41,8 @@ export default function Home() {
             <p className="max-w-[56ch] font-serif text-[17px] leading-[1.6] md:text-[19px] lg:col-span-6 lg:col-start-5">
               Five years building production software for other people&rsquo;s phones. I am moving
               that into AI engineering, where I build the system around the model: retrieval,
-              review agents, and real-time voice. What I bring is the production instinct that came
-              first. Latency, failure states, and what happens when it is wrong.
+              review agents, and real-time voice. What carries over is the production instinct that
+              came first. Latency, failure states, and what happens when it is wrong.
             </p>
           </div>
 
