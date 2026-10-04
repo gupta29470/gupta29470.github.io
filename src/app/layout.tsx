@@ -27,7 +27,7 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://gupta29470.github.io"),
   title: {
-    default: "Aakash Gupta — Applied AI Engineer",
+    default: "Aakash Gupta | Applied AI Engineer",
     template: "%s | Aakash Gupta",
   },
   description:
@@ -53,13 +53,13 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: "https://gupta29470.github.io",
     siteName: "Aakash Gupta",
-    title: "Aakash Gupta — Applied AI Engineer",
+    title: "Aakash Gupta | Applied AI Engineer",
     description:
       "Agents, retrieval and real-time voice systems, with the production instinct of four years shipping consumer software at scale.",
   },
   twitter: {
     card: "summary",
-    title: "Aakash Gupta — Applied AI Engineer",
+    title: "Aakash Gupta | Applied AI Engineer",
     description:
       "Agents, retrieval and real-time voice systems, with the production instinct of four years shipping consumer software at scale.",
   },
@@ -81,7 +81,7 @@ const jsonLd = {
   name: "Aakash Gupta",
   jobTitle: "Applied AI Engineer",
   email: "mailto:aa.1998.gupta@gmail.com",
-  address: { "@type": "PostalAddress", addressLocality: "Mumbai", addressCountry: "IN" },
+  address: { "@type": "PostalAddress", addressCountry: "IN" },
   sameAs: [
     "https://github.com/gupta29470",
     "https://www.linkedin.com/in/aakash98gupta/",

@@ -2,10 +2,9 @@ import { profile } from "@/content/work";
 import { IstClock } from "./ist-clock";
 
 const sections = [
-  { label: "Work", href: "#work" },
-  { label: "Archive", href: "#archive" },
-  { label: "Capabilities", href: "#capabilities" },
-  { label: "Notes", href: "#notes" },
+  { label: "Work", href: "#top" },
+  { label: "Experience", href: "#experience" },
+  { label: "What I bring", href: "#strengths" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -21,8 +20,8 @@ export function Masthead() {
           <span className="text-signal">.</span>
         </a>
 
-        <p className="meta hidden truncate lg:block">
-          Applied AI Engineer — agents, retrieval, real-time voice
+        <p className="meta hidden truncate xl:block">
+          Applied AI engineer, five years in production engineering
         </p>
 
         <nav aria-label="Sections" className="ml-auto flex items-center gap-4 md:gap-6">
@@ -46,10 +45,12 @@ export function Masthead() {
 
         <div className="ml-auto hidden items-center gap-3 xl:flex">
           <a
-            href={`mailto:${profile.email}`}
+            href={profile.codewalk}
+            target="_blank"
+            rel="noopener noreferrer"
             className="meta !text-ink transition-colors duration-300 hover:text-signal"
           >
-            Email
+            Codewalk
           </a>
           <span className="meta" aria-hidden>
             ·

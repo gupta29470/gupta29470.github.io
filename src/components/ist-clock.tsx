@@ -10,8 +10,9 @@ const formatter = new Intl.DateTimeFormat("en-GB", {
 });
 
 /**
- * The desk clock. Rendered empty on the server and filled on mount, because a
- * server-rendered time would be stale — and mismatched — by the time it paints.
+ * The clock in the masthead. Rendered empty on the server and filled on mount,
+ * because a server-rendered time would be stale, and mismatched, by the time it
+ * paints.
  */
 export function IstClock() {
   const [time, setTime] = useState<string | null>(null);

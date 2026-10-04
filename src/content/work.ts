@@ -3,30 +3,36 @@
  *
  * Provenance rules, applied when this file was written:
  *
- *  - Every number here is copied from Aakash's own resume files. Nothing is
- *    estimated, rounded up, or inferred.
- *  - The Codewalk entry that appears in the AI resume is deliberately absent:
- *    it is not shown as a project, and no Codewalk repository link is rendered
- *    anywhere on the site.
+ *  - Every number here was read out of the repository or the resume, not
+ *    remembered. Where a claim could not be verified it was left out rather
+ *    than softened. See the "not claimed" note at the bottom of this file.
  *  - The phone number on both resumes is deliberately absent.
- *  - Where a claim is a property rather than a metric ("zero third-party
- *    dependencies", "no indexer"), it is quoted as written in the resume.
+ *  - Codewalk is first, because it is the project closest to the work being
+ *    applied for. The IOS projects from the mobile resume are not listed.
  */
 
 export const profile = {
   name: "Aakash Gupta",
   role: "Applied AI Engineer",
-  desk: "Mumbai, India — IST (UTC+5:30)",
+  tagline: "Five years in production engineering, now building applied AI.",
   email: "aa.1998.gupta@gmail.com",
   github: "https://github.com/gupta29470",
   linkedin: "https://www.linkedin.com/in/aakash98gupta/",
   appStore: "https://apps.apple.com/us/app/navica-budget-trip-planner/id6759998334",
   resume: "/resume/Aakash_Gupta_Resume_AI.html",
   resumeMobile: "/resume/Aakash_Gupta_Resume_Flutter.html",
-  availability: "Open to applied AI engineer roles and contract work.",
+  codewalk: "https://www.codewalk.xyz/app",
 } as const;
 
-export type PlateName = "voice-flow" | "ecom-bot" | "local-first" | "marketplace";
+/** Small, checkable facts set under the name. No adjectives. */
+export const facts: { label: string; value: string }[] = [
+  { label: "Experience", value: "5 years building production software" },
+  { label: "Now", value: "Applied AI: voice agents, retrieval, review" },
+  { label: "Looking for", value: "AI engineering roles" },
+  { label: "Based in", value: "India, working remotely" },
+];
+
+export type PlateName = "codewalk" | "voice-flow";
 
 export type Outcome = { claim: string; note?: string };
 
@@ -35,14 +41,15 @@ export type Work = {
   slug: string;
   title: string;
   subtitle: string;
-  /** The one-line register entry: what it is, for whom. */
+  /** The one-line register entry. Plain description, no sales language. */
   line: string;
-  kind: "Personal AI system" | "Personal project" | "Team platform";
+  kind: string;
   year: string;
   fields: string[];
-  /** Where the code or demo lives. Absent when a repository is not public. */
+  /** Where the thing lives. Absent when there is no public link. */
   repo?: string;
   demo?: string;
+  product?: string;
   context: string;
   approach: string;
   build: { head: string; body: string }[];
@@ -54,6 +61,84 @@ export type Work = {
 export const work: Work[] = [
   {
     no: "01",
+    slug: "codewalk",
+    title: "Codewalk",
+    subtitle: "Code intelligence: ask a repository a question, and review its changes",
+    line: "A platform that indexes a repository, answers questions with citations, and reviews diffs against a rubric.",
+    kind: "Product platform",
+    year: "2026",
+    fields: ["Retrieval", "Code review", "Agent runtime", "Multi-agent", "Go + Python"],
+    product: "https://www.codewalk.xyz/app",
+    context:
+      "Reading an unfamiliar repository is slow, and reviewing a diff carefully is slower. Both jobs are mostly about finding the few facts that matter and being able to point at where they came from. Codewalk is a product built around that: index a repository once, then answer questions about it with citations and review changes against rules written down in a rubric pack.",
+    approach:
+      "The system is one product in three runtimes. Python carries the API, the agent runtime, retrieval, the indexing and review workers, and the evaluation harness, because that is where the model ecosystem lives. Go carries two things it is genuinely better at: the sandbox execution service, which owns the Docker socket and is mostly about cancellation and resource limits, and the edge gateway, which holds many long-lived SSE connections. They meet at a gRPC contract and one shared Postgres table.",
+    build: [
+      {
+        head: "Retrieval, and the one ranking that filters",
+        body: "Retrieval gathers from two places at once: a symbol walk over the code graph, and a batched vector search. Both go through the same gather function, so the search endpoint and the agent's search tool cannot disagree about what was found. The agent's path then makes three provider calls: expand the question into a few angles, rank every candidate from 0 to 10 in a single call, answer from the best few. The ranking is the only thing that drops evidence, and if the ranking call fails, nothing is dropped. The deterministic path makes no model calls at all.",
+      },
+      {
+        head: "Review that separates deterministic from generative",
+        body: "A diff is split into batches and reviewed in parallel, up to four at a time. Each batch returns findings and its own verdict on how much of that batch it actually covered. Coverage is derived from those per-batch verdicts, not from how many findings came back, so a review that ran and found nothing is a success and a review with a failed batch is reported as incomplete instead of quietly passing. Findings are grounded against the checked-out revision before they are stored.",
+      },
+      {
+        head: "Findings that do not come back",
+        body: "The part that decides whether a review bot survives contact with a team: when a person resolves or dismisses a finding, that verdict is fed into the next review as previous findings. A dismissed issue does not get re-reported on the following push. Comments are written back to the pull request after persistence, best effort, so a GitHub outage does not lose the review.",
+      },
+      {
+        head: "The row is the job; the stream is the doorbell",
+        body: "No long operation runs inside a request. A request commits the row and its outbox intent in one transaction, then publishes the id onto a Redis stream. A worker claims the row with a version-fenced update, does the work, and writes progress back. Postgres holds the state and the fence; Redis carries ids, locks and counters. A lost stream message is recoverable because the reaper re-announces it from the row, which is the only component in the system that repairs anything.",
+      },
+      {
+        head: "Multi-agent review, with ceilings instead of hope",
+        body: "The review engine runs a pool of agents over batches. The agent runtime is hand-written rather than framework-built, because its state has to be a durable row that survives a killed worker and a pause for human approval. It has four independent ceilings (iterations, wall clock, tokens, repeated calls) that complete a run with what it has and name the ceiling that fired, instead of failing the run.",
+      },
+      {
+        head: "Every model call through one gateway",
+        body: "Inference is bring-your-own-key. Provider keys are encrypted at rest, decrypted at a single call site, and every call goes through a per-tenant circuit breaker with a retry budget and a usage ledger. There is deliberately no fallback chain between providers: a provider failure surfaces as a provider failure.",
+      },
+      {
+        head: "Knowing when a change made it worse",
+        body: "There is an evaluation harness with versioned suites, deterministic scorers over saved trajectories, an LLM judge calibrated against hand labels, and a regression gate whose thresholds come from measured variance rather than taste. Retrieval quality is measured on a fixed baseline so a change to chunking or ranking can be shown to help or hurt.",
+      },
+    ],
+    outcome: [
+      {
+        claim: "A working product you can open today",
+        note: "codewalk.xyz/app",
+      },
+      {
+        claim: "Retrieval that answers with citations, and never drops evidence on a failed ranking call",
+      },
+      {
+        claim: "Review coverage reported per batch, so an incomplete review cannot look like a clean one",
+      },
+      {
+        claim: "Dismissed findings stay dismissed across pushes",
+      },
+      {
+        claim: "Polyglot on purpose: Python for the AI and the API, Go for the sandbox and the edge",
+      },
+      {
+        claim: "A known-gaps ledger listing what is not built, kept next to the code",
+        note: "the honest part, and the part I would want a reviewer to read first",
+      },
+    ],
+    colophon: [
+      ["API and workers", "Python, FastAPI, SQLAlchemy 2.0, Pydantic v2"],
+      ["Sandbox and edge", "Go: execution service over gRPC, gateway over HTTP"],
+      ["Data", "PostgreSQL 16 for state and the version fence, Redis 7 for streams, locks and counters"],
+      ["Parsing", "tree-sitter, 14 languages, parent and child chunks"],
+      ["Retrieval", "Symbol walk plus batched vector search, one ranking call"],
+      ["Models", "Bring your own key, 13 providers behind one gateway"],
+      ["Evaluation", "Versioned suites, deterministic scorers, LLM judge, regression gate"],
+      ["Status", "Pre-deploy. The product runs; nothing here claims a number it has not measured."],
+    ],
+    plate: "codewalk",
+  },
+  {
+    no: "02",
     slug: "voice-flow",
     title: "VoiceFlow",
     subtitle: "Real-time voice agents that hold a phone conversation",
@@ -64,9 +149,9 @@ export const work: Work[] = [
     repo: "https://github.com/gupta29470/voice-flow",
     demo: "https://youtu.be/WMqto41-tRw",
     context:
-      "Collections and inside-sales calls are a turn-taking problem before they are a language problem. A bot that is clever but talks over the person who called it is unusable. VoiceFlow places real phone calls and runs the whole loop — audio in, transcript, tool call, voice out — while staying interruptible at every step.",
+      "Collections and inside-sales calls are a turn-taking problem before they are a language problem. A bot that is clever but talks over the person who called it is unusable. VoiceFlow places real phone calls and runs the whole loop (audio in, transcript, tool call, voice out) while staying interruptible at every step.",
     approach:
-      "A cascaded pipeline over WebSockets, kept end to end in the telephony band. Twilio Media Streams delivers 8 kHz μ-law audio to Deepgram for streaming speech-to-text; the transcript is handed to Grok or Kimi with function calling; the reply is streamed out through Cartesia or ElevenLabs one sentence at a time. Turn-taking comes from STT endpointing rather than a fixed timer, and every synthesis task is cancellable so a caller can talk over the agent and be heard.",
+      "A cascaded pipeline over WebSockets, kept end to end in the telephony band. Twilio Media Streams delivers 8 kHz mu-law audio to Deepgram for streaming speech to text; the transcript is handed to Grok or Kimi with function calling; the reply is streamed out through Cartesia or ElevenLabs one sentence at a time. Turn-taking comes from STT endpointing rather than a fixed timer, and every synthesis task is cancellable so a caller can talk over the agent and be heard.",
     build: [
       {
         head: "Two clocks, one pipeline",
@@ -74,11 +159,11 @@ export const work: Work[] = [
       },
       {
         head: "Streaming at sentence granularity",
-        body: "Waiting for a complete model response before synthesising puts the whole generation time in front of the caller's first word. Splitting on sentence boundaries starts speech while the rest of the answer is still being written, which moves time-to-first-audio earlier without changing the model.",
+        body: "Waiting for a complete model response before synthesising puts the whole generation time in front of the caller's first word. Splitting on sentence boundaries starts speech while the rest of the answer is still being written, which moves time to first audio earlier without changing the model.",
       },
       {
         head: "Workflows as configuration",
-        body: "Loan recovery, EMI reminders, banking and sales run on the same engine with different prompts, guardrails and tools. Tools write structured results — a promise-to-pay, a qualified lead, an escalation — instead of leaving the outcome in a transcript somebody has to listen to.",
+        body: "Loan recovery, EMI reminders, banking and sales run on the same engine with different prompts, guardrails and tools. Tools write structured results (a promise to pay, a qualified lead, an escalation) instead of leaving the outcome in a transcript somebody has to listen to.",
       },
       {
         head: "Language-aware routing",
@@ -92,7 +177,7 @@ export const work: Work[] = [
     outcome: [
       {
         claim: "Interruptible, bidirectional speech over a real telephone line",
-        note: "8 kHz μ-law end to end through Twilio Media Streams",
+        note: "8 kHz mu-law end to end through Twilio Media Streams",
       },
       {
         claim: "Per-turn latency and p95 visible live, per provider and model",
@@ -103,7 +188,7 @@ export const work: Work[] = [
     ],
     colophon: [
       ["Runtime", "Python, FastAPI, WebSockets"],
-      ["Telephony", "Twilio Media Streams, 8 kHz μ-law"],
+      ["Telephony", "Twilio Media Streams, 8 kHz mu-law"],
       ["Speech in", "Deepgram streaming STT, endpointing for turns"],
       ["Reasoning", "Grok (xAI) and Kimi, with function calling"],
       ["Speech out", "Cartesia and ElevenLabs, sentence-level streaming"],
@@ -112,144 +197,13 @@ export const work: Work[] = [
     ],
     plate: "voice-flow",
   },
-  {
-    no: "02",
-    slug: "ecom-bot",
-    title: "EcomBot",
-    subtitle: "A support assistant that is not allowed to guess",
-    line: "A small language model fine-tuned for support tone, wired to the real catalogue for facts.",
-    kind: "Personal AI system",
-    year: "2025",
-    fields: ["Fine-tuning", "LoRA / PEFT", "Structured output", "Grounding"],
-    context:
-      "A support assistant's worst failure is a confident wrong answer about somebody's order. Fine-tuning alone cannot fix that: the order status is not in the weights and never will be. EcomBot splits the job — the model handles language and intent, the application handles facts.",
-    approach:
-      "Qwen 2.5 0.5B Instruct was fine-tuned with LoRA through PEFT and TRL on 385 support conversations covering orders, returns and refunds. At inference the tuned model extracts structured intent, and Python performs the catalogue and order lookups the intent names. The reply is composed from what the lookup returned, so the model never states a fact it was not handed.",
-    build: [
-      {
-        head: "Fine-tuning for register, not recall",
-        body: "385 real support exchanges are enough to teach a 0.5B model the shape of a support reply: short, specific, no over-apologising, no invented policy. That is the part language models are genuinely good at, and it is what the adapter is trained for.",
-      },
-      {
-        head: "Intent as a typed boundary",
-        body: "The only thing crossing from the model into the application is a structured intent — which order, which action, which question. It is validated before any lookup runs, so a malformed or unexpected intent fails loudly instead of reaching a customer.",
-      },
-      {
-        head: "The fact lane",
-        body: "Order state, catalogue data and returns policy are read from their own tables at answer time. Combined with a 0.5B parameter model, this keeps the whole assistant cheap and fast to run: the expensive part of the job — being factually correct — was never delegated to the model.",
-      },
-    ],
-    outcome: [
-      { claim: "Fine-tuned on 385 support conversations", note: "orders, returns, refunds" },
-      { claim: "Structured intent extraction, validated before any lookup" },
-      {
-        claim: "Factually correct answers by construction",
-        note: "order and catalogue facts come from Python, not from the weights",
-      },
-    ],
-    colophon: [
-      ["Model", "Qwen 2.5 0.5B Instruct"],
-      ["Tuning", "LoRA via PEFT and TRL"],
-      ["Training set", "385 customer-support conversations"],
-      ["Serving", "FastAPI, hybrid inference path"],
-      ["Runtime", "Python, PyTorch, Hugging Face Transformers"],
-    ],
-    plate: "ecom-bot",
-  },
-  {
-    no: "03",
-    slug: "local-first-notes",
-    title: "Local First Notes",
-    subtitle: "An iPhone app with nothing to install but the app",
-    line: "Notes built entirely from Apple's own frameworks — offline by default, synced when it can be.",
-    kind: "Personal project",
-    year: "2025",
-    fields: ["SwiftUI", "SwiftData", "CloudKit", "Local-first"],
-    repo: "https://github.com/gupta29470/local-first-notes",
-    context:
-      "Most apps begin by adding dependencies. This one begins by refusing them: a notes app that must work with no network, no account and no third-party SDK, using only what ships with the operating system. The interesting problem is not the note list — it is keeping three processes honest about the same data.",
-    approach:
-      "Clean Architecture with MVVM in SwiftUI, persistence in SwiftData, and sync through CloudKit rather than a server of its own. Models live in a local Swift Package so the app and its widget extension share one definition. App Groups move data between processes and BackgroundTasks handles refresh when the app is not running.",
-    build: [
-      {
-        head: "Three surfaces, one type",
-        body: "The app, the widget extension and background refresh are separate processes with separate containers. Putting the models in a Swift Package and the store in an App Group means a note written in one is the same type, and the same row, everywhere — no parallel model to drift.",
-      },
-      {
-        head: "Offline is the default state",
-        body: "Every write lands in the local store first. CloudKit reconciliation happens when the device decides it can, which means the app is fully usable on a flight and correct again on landing.",
-      },
-      {
-        head: "Zero third-party dependencies",
-        body: "No analytics SDK, no networking library, no persistence wrapper. The whole dependency graph is Apple's, which is also why the app stays small and its behaviour stays predictable across OS releases.",
-      },
-    ],
-    outcome: [
-      { claim: "Entirely Apple-native stack, zero third-party dependencies" },
-      { claim: "Offline-first reads and writes, CloudKit sync when available" },
-      { claim: "One shared model layer across app, widget and background tasks" },
-      { claim: "Clean Architecture and MVVM throughout" },
-    ],
-    colophon: [
-      ["UI", "SwiftUI with MVVM and Clean Architecture"],
-      ["Persistence", "SwiftData"],
-      ["Sync", "CloudKit"],
-      ["Sharing", "Local Swift Package for models, App Groups for data"],
-      ["Background", "BackgroundTasks"],
-      ["Dependencies", "None beyond Apple's frameworks"],
-    ],
-    plate: "local-first",
-  },
-  {
-    no: "04",
-    slug: "marketplace-ios",
-    title: "Marketplace",
-    subtitle: "A commerce app where every entry point is routed, not special-cased",
-    line: "Catalogue to checkout, with notifications, widgets and Spotlight sharing one navigation type.",
-    kind: "Personal project",
-    year: "2025",
-    fields: ["SwiftUI", "Swift Concurrency", "Deep linking", "Firebase"],
-    repo: "https://github.com/gupta29470/marketplace-ios",
-    context:
-      "A commerce app has more ways in than any other kind: a push about an order, a widget tap, a Spotlight result, a shared link. Treating each as its own navigation path is how apps end up with four half-correct routers. Here there is one destination type and four ways to reach it.",
-    approach:
-      "SwiftUI with the Observation framework, async/await and paginated loading for the catalogue, cart, checkout, order tracking, wishlist, reels, search and store map. Core Spotlight, WidgetKit and App Groups make the app's surfaces native rather than web views, and Firebase — Auth, Firestore, Analytics, Crashlytics and Cloud Messaging — carries identity and data underneath.",
-    build: [
-      {
-        head: "One destination, four callers",
-        body: "Typed routes are the contract. A notification, a widget, a Spotlight result and an in-app tap all resolve to the same destination value, so deep-link handling is written once and the four entry points cannot disagree about where a link goes.",
-      },
-      {
-        head: "Pagination with a cancellation story",
-        body: "Catalogue and search screens page with async/await tied to view lifetime, so scrolling fast or leaving a screen cancels in-flight work instead of letting stale pages land on top of fresh ones.",
-      },
-      {
-        head: "Native surfaces, shared state",
-        body: "Widgets and Spotlight need data the app has already fetched. App Groups give those extensions the same store, so the widget shows the real wishlist rather than a guess.",
-      },
-    ],
-    outcome: [
-      { claim: "Full commerce flow: catalogue, cart, checkout, order tracking, wishlist, reels, search, store map" },
-      { claim: "Typed routing shared by push, widgets, Spotlight and in-app navigation" },
-      { claim: "Paginated catalogue and search with lifecycle-bound cancellation" },
-      { claim: "Native iOS surfaces backed by Firebase, not web views" },
-    ],
-    colophon: [
-      ["UI", "SwiftUI with Observation"],
-      ["Concurrency", "async/await with pagination and cancellation"],
-      ["System surfaces", "WidgetKit, Core Spotlight, App Groups"],
-      ["Backend", "Firebase Auth, Firestore, Analytics, Crashlytics, FCM"],
-      ["Navigation", "Typed routes, deep links, notification and widget entry"],
-    ],
-    plate: "marketplace",
-  },
 ];
 
 /**
- * Work that is not an AI system. The register lists it in one line; the
- * folios hold the detail. Numbers here are the resume's own.
+ * Work that is not an AI system. The register lists it; a row expands for the
+ * detail. Numbers here are the resume's own.
  */
-export type ArchiveEntry = {
+export type ExperienceEntry = {
   org: string;
   role: string;
   period: string;
@@ -258,30 +212,28 @@ export type ArchiveEntry = {
   points: string[];
 };
 
-export const archive: ArchiveEntry[] = [
+export const experience: ExperienceEntry[] = [
   {
     org: "ANKO GCC",
     role: "Mobile Engineer",
-    period: "Oct 2024 — Present",
-    where: "Kmart & Target Australia",
-    summary:
-      "Retail app used by 3.74M people across Australia and New Zealand. Performance work, a CMS-driven home screen architecture, and an offline model that survives a bad network.",
+    period: "Oct 2024 to present",
+    where: "Kmart and Target Australia",
+    summary: "Retail app used by 3.74M people across Australia and New Zealand.",
     points: [
-      "Performance: WebView memory 2GB → 400MB; token clear 2,000ms → 10ms; product-list first load 6–9s → 131ms; logged-in product page 3,054ms → 231ms.",
+      "Performance: WebView memory 2GB to 400MB; token clear 2,000ms to 10ms; product-list first load 6 to 9s down to 131ms; logged-in product page 3,054ms to 231ms.",
       "Next-Gen Home Screen: co-designed the Contentful-driven architecture with shared BLoC patterns across 10+ modules, supporting 38.9M sessions with no major state-management defects after release.",
-      "Shoppable UGC (Tolstoy): owned the SDK integration and vendor rollout — 17M events, 923K users, 24% conversion among interactors, one month ahead of schedule.",
-      "Connectivity platform: screen-aware offline handling with auto-recovery, 2–7s faster reconnect across AU/NZ devices.",
-      "Rich push: native iOS media notifications — images, video and GIFs — through Braze.",
-      "Engineering standards: ran BLoC and code-quality brown-bags for 10–12 engineers; drove review practice and tech-debt cleanup.",
+      "Shoppable UGC (Tolstoy): owned the SDK integration and vendor rollout. 17M events, 923K users, 24% conversion among interactors, one month ahead of schedule.",
+      "Connectivity platform: screen-aware offline handling with auto-recovery, 2 to 7s faster reconnect across AU/NZ devices.",
+      "Rich push: native iOS media notifications (images, video and GIFs) through Braze.",
+      "Engineering standards: ran BLoC and code-quality brown-bags for 10 to 12 engineers; drove review practice and tech-debt cleanup.",
     ],
   },
   {
     org: "Explorex Technologies",
     role: "Frontend Developer (Flutter)",
-    period: "Oct 2023 — Jul 2024",
+    period: "Oct 2023 to Jul 2024",
     where: "Digital Dining",
-    summary:
-      "Built the guest-facing dining product from nothing — home, menu, cart and pay-bill — live across 300+ restaurants in Bangalore.",
+    summary: "Built the guest-facing dining product from nothing, live across 300+ restaurants in Bangalore.",
     points: [
       "Owned the product end to end from first screen to production rollout across 300+ restaurants.",
     ],
@@ -289,10 +241,9 @@ export const archive: ArchiveEntry[] = [
   {
     org: "Deciml",
     role: "Flutter Developer",
-    period: "May 2023 — Aug 2023",
+    period: "May 2023 to Aug 2023",
     where: "Consumer finance app",
-    summary:
-      "Moved editorial content out of app releases and into configuration, then kept releases and product copy moving.",
+    summary: "Moved editorial content out of app releases and into configuration.",
     points: [
       "Migrated FAQs and blogs to Firebase Remote Config so content shipped without an app-store review.",
       "Owned bug fixes, release cycles and product-copy updates.",
@@ -301,10 +252,9 @@ export const archive: ArchiveEntry[] = [
   {
     org: "Threedots",
     role: "Product Engineer",
-    period: "Sep 2021 — Mar 2023",
+    period: "Sep 2021 to Mar 2023",
     where: "Social investing platform, 100K+ users",
-    summary:
-      "Four product surfaces on a social investing platform, plus the onboarding that introduced them.",
+    summary: "Four product surfaces on a social investing platform, plus the onboarding that introduced them.",
     points: [
       "Built Trade Feeds (~50K users), Tag-Based Group Discovery (~24K), In-App Rating (~300K) and the current-affairs feed (~34K).",
       "Built Leagues, Polls and Paper Trading games for 100K+ users.",
@@ -314,87 +264,37 @@ export const archive: ArchiveEntry[] = [
   },
 ];
 
-export const archiveExtras: ArchiveEntry[] = [
+/**
+ * A deliberately short list. This is where the value actually is, so it is
+ * written as statements of fact rather than as capabilities.
+ */
+export const strengths: { head: string; body: string }[] = [
   {
-    org: "Navica",
-    role: "Budget Trip Planner",
-    period: "Published",
-    where: "App Store & Play Store",
-    summary:
-      "Designed, built and published end to end — from concept to both stores under my own name.",
-    points: ["Sole owner of design, build and release for a budget trip-planning app."],
-  },
-];
-
-export type Capability = { no: string; name: string; body: string; tools: string };
-
-export const capabilities: Capability[] = [
-  {
-    no: "01",
-    name: "Agents & orchestration",
-    body: "Function calling, tool schemas and guardrails around what a model is allowed to do. Multi-step flows that write structured results rather than leaving the outcome in a transcript, and human checkpoints where a wrong answer is expensive.",
-    tools: "LangChain · LangGraph · MCP · function calling",
+    head: "I have shipped to people who did not ask for a demo",
+    body: "Five years of consumer software on real devices, real networks and real release trains. That is where the habits come from: measure before optimising, handle the failure state, and assume somebody will open this on a bad connection.",
   },
   {
-    no: "02",
-    name: "Retrieval & grounding",
-    body: "Chunking strategy, embeddings, semantic and hybrid search, and query rewriting. The goal is never a clever retriever — it is an answer whose source a reader can go and check.",
-    tools: "ChromaDB · embeddings · RAG · Langfuse",
+    head: "I keep facts out of the model",
+    body: "Order state, policy and evidence come from the database or the repository. The model's job is language and intent. It is the difference between an assistant that is usually right and one that cannot be confidently wrong about somebody's order.",
   },
   {
-    no: "03",
-    name: "Fine-tuning",
-    body: "Parameter-efficient training for tone, format and intent extraction, and a clear line about when to fine-tune at all. Some jobs belong in the weights; facts belong in the database.",
-    tools: "PEFT (LoRA) · TRL · PyTorch · Hugging Face",
+    head: "I instrument the whole path",
+    body: "A voice agent is a chain and the slowest link decides the conversation. Per-stage latency and percentile numbers, not just an average, and an evaluation harness so a change that made things worse is visible before it ships.",
   },
   {
-    no: "04",
-    name: "Real-time systems",
-    body: "Streaming audio and tokens under a latency budget, WebSockets, and cancellation as a first-class path rather than an error case. Interruption is a feature you design for.",
-    tools: "WebSockets · FastAPI · streaming STT/TTS · Twilio",
-  },
-  {
-    no: "05",
-    name: "Python services",
-    body: "Async FastAPI services, typed boundaries between model output and application logic, retries with fallback across providers, and Docker images that behave the same outside my laptop.",
-    tools: "Python · FastAPI · PostgreSQL · DuckDB · Docker · CI/CD",
-  },
-  {
-    no: "06",
-    name: "Product surfaces",
-    body: "Four years of shipping consumer software for phones — which is where most of the judgement about latency, failure states and offline behaviour was actually earned.",
-    tools: "Flutter (BLoC) · SwiftUI · SwiftData · CloudKit · Firebase",
-  },
-];
-
-export const principles: { head: string; body: string }[] = [
-  {
-    head: "Measure before tuning",
-    body: "Cutting a product page from 3,054ms to 231ms was not a rewrite, it was a stopwatch and a profiler. Model work is no different: the average hides the tail, and the tail is what a user feels.",
-  },
-  {
-    head: "Facts live in the database, not the weights",
-    body: "The model on our support assistant extracts intent; Python owns the truth. Generated prose should never be the only thing standing between a customer and their order status.",
-  },
-  {
-    head: "Instrument the whole turn",
-    body: "A voice agent is a chain, and the slowest link decides the conversation. Per-stage and end-to-end latency, average and p95, per provider — otherwise the tuning is a guess.",
-  },
-  {
-    head: "Design for interruption",
-    body: "Speech, networks and users all cut in. The interesting engineering is the cancellation path — stopping a synthesis task, a request, or a release cleanly and quickly.",
-  },
-  {
-    head: "Prove it outside the notebook",
-    body: "A demo that runs on one laptop is not a system. It has to hold on a real phone, on a real network, in two languages, at 8 in the morning.",
+    head: "I write down what I have not built",
+    body: "Codewalk carries a gap ledger next to the code, and the parts of this system that are not proven say so. I would rather a reviewer trust the numbers that are there than find out later which ones were decoration.",
   },
 ];
 
 /**
- * The deliberate omissions. Kept inline so the next editor does not
- * "helpfully" restore them.
+ * Deliberately not claimed anywhere on this site, and the reason each one was
+ * left out. Kept here so the next editor does not helpfully restore them.
  *
- *  - Codewalk: removed at the owner's request. No card, no repo link, no
- *    mention anywhere.
- *  - Phone number: present on both resume files, excluded from this site.
+ *  - "MCP server, 39 tools": no MCP server exists in codewalk-platform's
+ *    app/modules/ and architecture.md does not mention MCP. Unverifiable here.
+ *  - "tree-sitter, 15+ languages": parsing/parser.py registers 14.
+ *  - "multi-provider layer, 7 providers": llm_gateway/providers.py lists 13.
+ *  - The phone number on both resume files: excluded by request.
+ *  - The two native iOS projects on the mobile resume: excluded by request.
  */

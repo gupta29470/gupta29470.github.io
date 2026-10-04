@@ -102,6 +102,23 @@
   .grain-strong::before {
     opacity: 0.85;
   }
+
+  /* The project sheet arrives from the bottom edge. Declared here rather than
+     using an animation library: it is one transform and one fade. */
+  @keyframes sheet-up {
+    from {
+      transform: translateY(2.5rem);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-sheet {
+    animation: sheet-up 260ms var(--ease-opslag) both;
+  }
 }
 
 @layer utilities {
