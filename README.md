@@ -79,6 +79,7 @@ src/
 │   ├── work-index.tsx    the register and the bottom sheet
 │   ├── plates.tsx        two schematic diagrams
 │   ├── experience.tsx    work experience, behind <details>
+│   ├── skills.tsx        the skills register
 │   └── ist-clock.tsx     client clock, filled on mount
 └── content/work.ts       every word and figure on the site
 public/resume/            the two resumes, served as-is
@@ -90,6 +91,9 @@ public/resume/            the two resumes, served as-is
   five-panel horizontal spread, which read badly on a phone and hid the fact that a project
   had more than one panel. The sheet is remounted per project (via `key`), which is what resets
   its scroll position to the top without a reset effect.
+- Outcome notes can carry an `href`; when they do they render as links. The product URL was
+  plain text in an outcome note for a while, which is exactly the kind of thing nobody notices
+  until a reader cannot click it.
 - Rows that open say so. The archive rows used to end in a bare `+` and nobody could tell they
   were interactive, so `experience.tsx` carries a labelled Expand control that flips to
   Collapse with `group-open:`.

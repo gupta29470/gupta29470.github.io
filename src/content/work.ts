@@ -8,7 +8,7 @@
  *    than softened. See the "not claimed" note at the bottom of this file.
  *  - The phone number on both resumes is deliberately absent.
  *  - Codewalk is first, because it is the project closest to the work being
- *    applied for. The IOS projects from the mobile resume are not listed.
+ *    applied for.
  */
 
 export const profile = {
@@ -29,12 +29,17 @@ export const facts: { label: string; value: string }[] = [
   { label: "Experience", value: "5 years building production software" },
   { label: "Now", value: "Applied AI: voice agents, retrieval, review" },
   { label: "Looking for", value: "AI engineering roles" },
-  { label: "Based in", value: "India, working remotely" },
+  { label: "Based in", value: "India" },
 ];
 
 export type PlateName = "codewalk" | "voice-flow";
 
-export type Outcome = { claim: string; note?: string };
+export type Outcome = {
+  claim: string;
+  note?: string;
+  /** When the note is a place to go, give it somewhere to go. */
+  href?: string;
+};
 
 export type Work = {
   no: string;
@@ -107,6 +112,7 @@ export const work: Work[] = [
       {
         claim: "A working product you can open today",
         note: "codewalk.xyz/app",
+        href: "https://www.codewalk.xyz/app",
       },
       {
         claim: "Retrieval that answers with citations, and never drops evidence on a failed ranking call",
@@ -265,25 +271,32 @@ export const experience: ExperienceEntry[] = [
 ];
 
 /**
- * A deliberately short list. This is where the value actually is, so it is
- * written as statements of fact rather than as capabilities.
+ * Skills, set as a register rather than a wall of keywords.
+ *
+ * Deliberately short, and grouped by what the work is rather than by which tool
+ * it was. The project write-ups name the specifics, so this is the index to them
+ * and claims nothing the projects do not already support.
  */
-export const strengths: { head: string; body: string }[] = [
+export type SkillGroup = { no: string; name: string; items: string };
+
+export const skills: SkillGroup[] = [
   {
-    head: "I have shipped to people who did not ask for a demo",
-    body: "Five years of consumer software on real devices, real networks and real release trains. That is where the habits come from: measure before optimising, handle the failure state, and assume somebody will open this on a bad connection.",
+    no: "01",
+    name: "AI and GenAI",
+    items:
+      "Retrieval augmented generation, semantic and graph retrieval, embeddings, chunking strategy, query rewriting, ranking, function calling, agent runtimes, multi-agent review, parameter efficient fine-tuning (LoRA), prompt and context design, latency engineering for streaming systems, evaluation harnesses and regression gates",
   },
   {
-    head: "I keep facts out of the model",
-    body: "Order state, policy and evidence come from the database or the repository. The model's job is language and intent. It is the difference between an assistant that is usually right and one that cannot be confidently wrong about somebody's order.",
+    no: "02",
+    name: "Backend and real time",
+    items:
+      "Python, FastAPI, async services, WebSockets and SSE, queue and worker patterns, job state machines, idempotency, retries with backoff, circuit breakers, Postgres, Redis, DuckDB, SQLite, Docker, CI",
   },
   {
-    head: "I instrument the whole path",
-    body: "A voice agent is a chain and the slowest link decides the conversation. Per-stage latency and percentile numbers, not just an average, and an evaluation harness so a change that made things worse is visible before it ships.",
-  },
-  {
-    head: "I write down what I have not built",
-    body: "Codewalk carries a gap ledger next to the code, and the parts of this system that are not proven say so. I would rather a reviewer trust the numbers that are there than find out later which ones were decoration.",
+    no: "03",
+    name: "Product surfaces",
+    items:
+      "Flutter and Dart, SwiftUI and Swift, Firebase, offline first behaviour, performance profiling, release management, CMS driven interfaces",
   },
 ];
 

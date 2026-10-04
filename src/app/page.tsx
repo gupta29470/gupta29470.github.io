@@ -1,7 +1,8 @@
 import { Experience } from "@/components/experience";
 import { Masthead } from "@/components/masthead";
+import { Skills } from "@/components/skills";
 import { WorkIndex } from "@/components/work-index";
-import { experience, facts, profile, strengths, work } from "@/content/work";
+import { experience, facts, profile, work } from "@/content/work";
 
 /** A section label, set the same way everywhere. */
 function SectionHead({ title, note, id }: { title: string; note?: string; id?: string }) {
@@ -37,18 +38,12 @@ export default function Home() {
           </h1>
 
           <div className="mt-8 grid grid-cols-1 gap-6 md:mt-12 lg:grid-cols-12">
-            <div className="lg:col-span-6 lg:col-start-5">
-              <p className="max-w-[56ch] font-serif text-[17px] leading-[1.6] md:text-[19px]">
-                Five years building production software for other people&rsquo;s phones. I am moving
-                that into AI engineering, where I build the system around the model: retrieval,
-                review agents, and real-time voice. What I bring is the production instinct that
-                came first. Latency, failure states, and what happens when it is wrong.
-              </p>
-              <p className="mt-5 max-w-[56ch] font-serif text-[17px] leading-[1.6] text-ink/80">
-                I learn by building and shipping. Both projects below are real systems with real
-                limits, and the gaps are written down rather than hidden.
-              </p>
-            </div>
+            <p className="max-w-[56ch] font-serif text-[17px] leading-[1.6] md:text-[19px] lg:col-span-6 lg:col-start-5">
+              Five years building production software for other people&rsquo;s phones. I am moving
+              that into AI engineering, where I build the system around the model: retrieval,
+              review agents, and real-time voice. What I bring is the production instinct that came
+              first. Latency, failure states, and what happens when it is wrong.
+            </p>
           </div>
 
           <dl className="mt-10 grid grid-cols-1 gap-x-8 gap-y-4 border-t border-rule pt-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -125,24 +120,12 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ── What I bring ────────────────────────────────────────────────── */}
+        {/* ── Skills ──────────────────────────────────────────────────────── */}
         <section className="border-t border-ink px-4 py-12 md:px-8 md:py-16">
-          <SectionHead id="strengths" title="What I bring" />
-          <ul className="mt-2">
-            {strengths.map((item) => (
-              <li
-                key={item.head}
-                className="grid grid-cols-1 gap-x-10 gap-y-2 border-b border-rule py-6 lg:grid-cols-12"
-              >
-                <h3 className="font-sans text-[19px] font-extrabold uppercase leading-tight tracking-tight lg:col-span-4 lg:text-[21px]">
-                  {item.head}
-                </h3>
-                <p className="min-w-0 max-w-[62ch] font-serif text-[15.5px] leading-[1.65] text-ink/85 lg:col-span-7">
-                  {item.body}
-                </p>
-              </li>
-            ))}
-          </ul>
+          <SectionHead id="skills" title="Skills" />
+          <div className="mt-8">
+            <Skills />
+          </div>
         </section>
 
         {/* ── Contact ─────────────────────────────────────────────────────── */}
@@ -191,9 +174,7 @@ export default function Home() {
                 Open to AI engineering roles
               </dd>
               <dt className="meta pt-[3px]">Based in</dt>
-              <dd className="border-b border-rule pb-3 font-serif text-[15px]">
-                India, working remotely
-              </dd>
+              <dd className="border-b border-rule pb-3 font-serif text-[15px]">India</dd>
               <dt className="meta pt-[3px]">Codewalk</dt>
               <dd className="border-b border-rule pb-3 font-serif text-[15px]">
                 <a
@@ -224,14 +205,14 @@ export default function Home() {
       {/* ── Footer ────────────────────────────────────────────────────────── */}
       <footer className="border-t border-ink px-4 pt-10 pb-6 md:px-8 md:pt-14">
         <div className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-12">
-          <p className="display text-[13vw] lg:col-span-5 lg:text-[5vw]">
+          <p className="display text-[13vw] lg:col-span-6 lg:text-[5vw]">
             Aakash
             <br />
             Gupta
             <span className="text-signal">.</span>
           </p>
 
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-4">
             <p className="meta mb-4">Elsewhere</p>
             <address className="font-serif text-[15px] not-italic leading-[1.8]">
               <a href={`mailto:${profile.email}`} className="rule-link">
@@ -256,16 +237,6 @@ export default function Home() {
                 linkedin.com/in/aakash98gupta
               </a>
             </address>
-          </div>
-
-          <div className="lg:col-span-4">
-            <p className="meta mb-4">Colophon</p>
-            <p className="max-w-[46ch] font-serif text-[14px] leading-[1.7] text-ink/80">
-              Set in Archivo, Source Serif 4 and IBM Plex Mono. Drawn on newsprint #F5F2EB with ink
-              #141414; the red is rationed, and it is always the point of the page. The schematics
-              describe real systems rather than illustrate them. No trackers, no cookies, no dark
-              mode.
-            </p>
           </div>
         </div>
 

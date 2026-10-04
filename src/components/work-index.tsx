@@ -57,11 +57,28 @@ function IndexRow({
    The bottom sheet. Vertical scroll, one project at a time.
    ──────────────────────────────────────────────────────────────────────────── */
 
-function MetaRow({ term, detail }: { term: string; detail: string }) {
+function MetaRow({
+  term,
+  detail,
+  href,
+}: {
+  term: string;
+  detail: string;
+  /** An address on the row is a link, not a label. */
+  href?: string;
+}) {
   return (
     <div className="grid grid-cols-[7rem_1fr] gap-x-4 border-t border-rule py-3">
       <dt className="meta pt-[2px]">{term}</dt>
-      <dd className="min-w-0 font-serif text-[15px] leading-snug">{detail}</dd>
+      <dd className="min-w-0 font-serif text-[15px] leading-snug">
+        {href ? (
+          <a href={href} target="_blank" rel="noopener noreferrer" className="rule-link">
+            {detail} ↗
+          </a>
+        ) : (
+          detail
+        )}
+      </dd>
     </div>
   );
 }
@@ -186,10 +203,14 @@ function WorkSheet({
                 <MetaRow term="Year" detail={item.year} />
                 <MetaRow term="Fields" detail={item.fields.join(", ")} />
                 {item.product ? (
-                  <MetaRow term="Product" detail="codewalk.xyz/app" />
+                  <MetaRow term="Product" detail="codewalk.xyz/app" href={item.product} />
                 ) : null}
-                {item.repo ? <MetaRow term="Code" detail="github.com/gupta29470" /> : null}
-                {item.demo ? <MetaRow term="Walkthrough" detail="Demo video" /> : null}
+                {item.repo ? (
+                  <MetaRow term="Code" detail="github.com/gupta29470" href={item.repo} />
+                ) : null}
+                {item.demo ? (
+                  <MetaRow term="Walkthrough" detail="Demo video" href={item.demo} />
+                ) : null}
               </dl>
 
               <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
@@ -282,9 +303,20 @@ function WorkSheet({
                       {entry.claim}
                     </span>
                     {entry.note ? (
-                      <span className="meta mt-1 block normal-case tracking-normal">
-                        {entry.note}
-                      </span>
+                      entry.href ? (
+                        <a
+                          href={entry.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="meta mt-1 block normal-case tracking-normal !text-ink underline decoration-rule underline-offset-4 transition-colors duration-300 hover:text-signal hover:decoration-signal"
+                        >
+                          {entry.note} ↗
+                        </a>
+                      ) : (
+                        <span className="meta mt-1 block normal-case tracking-normal">
+                          {entry.note}
+                        </span>
+                      )
                     ) : null}
                   </div>
                 </li>

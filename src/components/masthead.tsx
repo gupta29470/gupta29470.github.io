@@ -4,7 +4,7 @@ import { IstClock } from "./ist-clock";
 const sections = [
   { label: "Work", href: "#top" },
   { label: "Experience", href: "#experience" },
-  { label: "What I bring", href: "#strengths" },
+  { label: "Skills", href: "#skills" },
   { label: "Contact", href: "#contact" },
 ];
 
