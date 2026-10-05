@@ -23,8 +23,19 @@ each deploy.
 - Manually: `./scripts/html-to-pdf.sh public/resume/Aakash_Gupta_Resume_AI.html`
 
 The runner has no SF Pro Text, so its PDF falls back to Liberation Sans and DejaVu Sans. Same single
-A4 page, different bytes. The runner's output is treated as canonical, because that is the file a
-visitor actually downloads.
+A4 page, and visually the same: the resume asks for system sans faces, so the Mac build embeds SF
+Pro Text and the runner embeds Liberation Sans, both sans, both with the same metrics. The runner's
+output is treated as canonical, because that is the file a visitor actually downloads.
+
+To bring the published copy into the local `~/Downloads/Professional/resume` folder:
+
+```bash
+./scripts/sync-resume.sh          # pulls from gupta29470.github.io
+BASE=... DEST=... ./scripts/sync-resume.sh   # override either end
+```
+
+It reports a sha for each file and warns if the published HTML no longer matches
+`public/resume/`, which means the deploy is behind.
 
 ## Deployment
 
