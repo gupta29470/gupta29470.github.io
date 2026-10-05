@@ -262,6 +262,16 @@ function WorkSheet({
               <div className="lg:col-span-5">
                 <p className="meta mb-3">{item.kind}</p>
                 <h3 className="display text-[13vw] md:text-[4.2rem]">{item.title}</h3>
+                <ul className="mt-4 flex flex-wrap gap-x-2 gap-y-2">
+                  {item.focus.map((tag) => (
+                    <li
+                      key={tag}
+                      className="meta border border-rule px-2 py-1 !text-ink"
+                    >
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               <dl className="self-end lg:col-span-6 lg:col-start-7">

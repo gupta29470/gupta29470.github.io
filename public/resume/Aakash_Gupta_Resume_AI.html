@@ -78,12 +78,12 @@
   <div class="row">
     <span class="title"><a href="https://www.codewalk.xyz/app">Codewalk&nbsp;↗</a>: AI Code Intelligence Platform <span class="detail">· <a href="https://youtu.be/WMqto41-tRw">demo video</a></span></span>
   </div>
+  <div class="subtitle">Indexing, RAG-based chat, and multi-agent code review over a repository, as one product</div>
   <ul>
-    <li><b>Corrective RAG:</b> graph symbol walk plus batched vector search through one shared gather, a single ranking call that is the only filter, and answers with citations back to file and symbol</li>
-    <li><b>AI code review:</b> diffs split into batches reviewed in parallel, each returning its own coverage verdict; findings grounded against the checkout, written back to the PR, and dismissed findings fed into the next review so they cannot return</li>
-    <li><b>Agent runtime:</b> hand-rolled state machine with four independent ceilings (iterations, wall clock, tokens, repeats) that complete a run rather than fail it; side-effecting tools claimed before they run</li>
-    <li><b>Platform:</b> row-is-the-job queueing over Postgres and Redis streams, BYOK inference with a per-tenant circuit breaker, and an eval harness with versioned suites and variance-derived thresholds</li>
-    <li><b>Parsing:</b> tree-sitter across <b>14</b> languages, parent-child chunking, and an atomic index swap so readers only open a finished index</li>
+    <li><b>Multi-agent review:</b> a diff is partitioned into batches and a pool of review agents works them in parallel (<b>4</b> concurrent), each batch returning findings plus its own coverage verdict, so a review with a failed batch reports as incomplete instead of passing. Findings are grounded against the checked-out revision before storage, then written back as PR comments and a check run.</li>
+    <li><b>RAG-based chat:</b> a question expands into 2–4 angles, then one shared gather pulls from a graph symbol walk and a batched vector search in a single embedding request; every candidate is scored <b>0–10</b> in one ranking call, which is the only step that drops evidence, and a failed ranking keeps everything. Answers cite the file and symbol.</li>
+    <li><b>Indexing:</b> tree-sitter parses <b>14</b> languages into a symbol graph and parent-child chunks, embedded under an adaptive rate governor, then promoted by an atomic swap so readers only ever open a finished index and a retry resumes rather than re-embedding files it already paid for.</li>
+    <li><b>Underneath:</b> 202-Accepted queueing where the Postgres row is the job and a Redis stream is the doorbell, a reaper that repairs stalled work, BYOK inference behind a per-tenant circuit breaker, and an eval harness with deterministic scorers and variance-derived pass thresholds.</li>
   </ul>
   <p class="stack"><b>Stack:</b> Python, FastAPI, PostgreSQL, Redis, tree-sitter, ChromaDB, DuckDB, Next.js, Docker, Go edge gateway</p>
 </div>

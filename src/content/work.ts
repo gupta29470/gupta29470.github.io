@@ -39,6 +39,8 @@ export type Work = {
   title: string;
   /** The one-line register entry. Written, not derived from `context`. */
   summary: string;
+  /** The two or three things this project is actually about. */
+  focus: string[];
   kind: string;
   year: string;
   /** Where the thing lives. Absent when there is no public link. */
@@ -61,6 +63,7 @@ export const work: Work[] = [
     slug: "codewalk",
     title: "Codewalk",
     summary: "Indexes a repository, answers questions with citations, and reviews diffs.",
+    focus: ["Multi-agent review", "RAG-based chat", "Indexing"],
     kind: "Code intelligence platform",
     year: "2026",
     product: "https://www.codewalk.xyz/app",
@@ -69,7 +72,7 @@ export const work: Work[] = [
     flow: [
       "Indexing. The repository is cloned and parsed with tree-sitter into a symbol graph and parent and child chunks, embedded, then promoted into place with an atomic swap, so readers only ever open a finished index.",
       "Chat. A question is expanded into a few angles, gathered from the graph and the vectors through one shared gather, ranked in a single call, and answered from the best few with citations back to the file and symbol.",
-      "Review. A diff is split into batches reviewed in parallel, each returning its own coverage verdict. Findings are grounded against the checked-out revision, written back to the pull request, and a dismissed finding is fed into the next review so it cannot come back.",
+      "Review. A diff is split into batches and a pool of review agents works them in parallel, each batch returning findings plus its own verdict on how much of that batch it covered. Findings are grounded against the checked-out revision before they are stored, then written back to the pull request.",
     ],
     youtube: "bqmJnED7GMk",
     youtubeCredit: "Codewalk walkthrough",
@@ -89,6 +92,7 @@ export const work: Work[] = [
     slug: "voice-flow",
     title: "VoiceFlow",
     summary: "A phone agent that listens, answers out loud, and yields when interrupted.",
+    focus: ["Real-time voice", "Streaming and barge-in"],
     kind: "Real-time voice agents",
     year: "2025",
     repo: "https://github.com/gupta29470/voice-flow",

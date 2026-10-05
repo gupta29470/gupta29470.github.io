@@ -112,6 +112,12 @@ public/resume/            the AI resume, served as-is
   five-panel horizontal spread, which read badly on a phone and hid the fact that a project
   had more than one panel. The sheet is remounted per project (via `key`), which is what resets
   its scroll position to the top without a reset effect.
+- Each project carries a `focus` list, shown as tags under the title: Codewalk is multi-agent
+  review, RAG-based chat and indexing; VoiceFlow is real-time voice and streaming. It is the
+  first thing a reader sees, so they know what the project is before the context paragraph.
+- No copy mentions dismissed findings, by request. The feature is real (`/codewalk dismiss`,
+  per-batch verdicts, `previous_findings` fed to the next run), so this is a product call about
+  what to advertise, not a correction. If it goes back in, restore it in `content/work.ts` only.
 - A project sheet is Context, How it flows, Demo, Tech stack and tools. It used to carry seven
   sections including an outcome list and a per-project colophon; that was more detail than a
   reader wanted and it buried the two things that matter, the flow and the stack.
