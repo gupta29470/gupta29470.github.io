@@ -71,12 +71,12 @@ export const work: Work[] = [
     line: "A platform that indexes a repository, answers questions with citations, and reviews diffs against a rubric.",
     kind: "Product platform",
     year: "2026",
-    fields: ["Retrieval", "Code review", "Agent runtime", "Multi-agent", "Go + Python"],
+    fields: ["Retrieval", "Code review", "Agent runtime", "Evaluation"],
     product: "https://www.codewalk.xyz/app",
     context:
       "Reading an unfamiliar repository is slow, and reviewing a diff carefully is slower. Both jobs are mostly about finding the few facts that matter and being able to point at where they came from. Codewalk is a product built around that: index a repository once, then answer questions about it with citations and review changes against rules written down in a rubric pack.",
     approach:
-      "The system is one product in three runtimes. Python carries the API, the agent runtime, retrieval, the indexing and review workers, and the evaluation harness, because that is where the model ecosystem lives. Go carries two things it is genuinely better at: the sandbox execution service, which owns the Docker socket and is mostly about cancellation and resource limits, and the edge gateway, which holds many long-lived SSE connections. They meet at a gRPC contract and one shared Postgres table.",
+      "The system is one product in two runtimes. Python carries the API, the agent runtime, retrieval, the indexing and review workers, and the evaluation harness, because that is where the model ecosystem lives. A Go edge gateway in front of it holds the long-lived SSE connections the browser reads while a job runs. The two share one Postgres table for state.",
     build: [
       {
         head: "Retrieval, and the one ranking that filters",
@@ -123,7 +123,7 @@ export const work: Work[] = [
         claim: "Dismissed findings stay dismissed across pushes",
       },
       {
-        claim: "Polyglot on purpose: Python for the AI and the API, Go for the sandbox and the edge",
+        claim: "Polyglot on purpose: Python for the AI and the API, Go for the edge",
       },
       {
         claim: "A known-gaps ledger listing what is not built, kept next to the code",
@@ -132,13 +132,13 @@ export const work: Work[] = [
     ],
     colophon: [
       ["API and workers", "Python, FastAPI, SQLAlchemy 2.0, Pydantic v2"],
-      ["Sandbox and edge", "Go: execution service over gRPC, gateway over HTTP"],
+      ["Go", "Edge gateway: SSE connections, rate limiting, health checked proxy"],
       ["Data", "PostgreSQL 16 for state and the version fence, Redis 7 for streams, locks and counters"],
       ["Parsing", "tree-sitter, 14 languages, parent and child chunks"],
       ["Retrieval", "Symbol walk plus batched vector search, one ranking call"],
       ["Models", "Bring your own key, 13 providers behind one gateway"],
       ["Evaluation", "Versioned suites, deterministic scorers, an LLM judge, variance derived pass thresholds"],
-      ["Status", "Pre-deploy. The product runs; nothing here claims a number it has not measured."],
+      ["Status", "Pre-deploy and honest about it. The services are built and unit tested, but nothing has run on a live host yet. There is a gap ledger listing what is not built."],
     ],
     plate: "codewalk",
   },
