@@ -5,6 +5,7 @@ const sections = [
   { label: "Work", href: "#top" },
   { label: "Experience", href: "#experience" },
   { label: "Capabilities", href: "#skills" },
+  { label: "Resume", href: "#resume" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -20,9 +21,7 @@ export function Masthead() {
           <span className="text-signal">.</span>
         </a>
 
-        <p className="meta hidden truncate xl:block">
-          Applied AI engineer, five years in production engineering
-        </p>
+        <p className="meta hidden truncate xl:block">Applied AI engineer</p>
 
         <nav aria-label="Sections" className="ml-auto flex items-center gap-4 md:gap-6">
           {sections.map((section) => (

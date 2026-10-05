@@ -1,6 +1,7 @@
 import { Capacities } from "@/components/capacities";
 import { Experience } from "@/components/experience";
 import { Masthead } from "@/components/masthead";
+import { Resume } from "@/components/resume";
 import { WorkIndex } from "@/components/work-index";
 import { experience, facts, profile, work } from "@/content/work";
 
@@ -125,6 +126,14 @@ export default function Home() {
           <SectionHead id="skills" title="What I can take on" note="Each one, with the work that proves it" />
           <div className="mt-4">
             <Capacities />
+          </div>
+        </section>
+
+        {/* ── Resume ──────────────────────────────────────────────────────── */}
+        <section className="border-t border-ink px-4 py-12 md:px-8 md:py-16">
+          <SectionHead id="resume" title="Resume" note="One page, PDF or web" />
+          <div className="mt-8">
+            <Resume />
           </div>
         </section>
 

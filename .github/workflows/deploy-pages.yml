@@ -38,6 +38,15 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      # The PDF is generated from the resume HTML rather than committed stale, so
+      # the two cannot drift apart when the resume is edited. The shell-only
+      # browser is a ~100MB download on a cold cache and a no-op once cached.
+      - name: Ensure a headless browser for the PDF
+        run: npx --yes playwright install --only-shell chromium-headless-shell
+
+      - name: Generate the resume PDF
+        run: ./scripts/html-to-pdf.sh public/resume/Aakash_Gupta_Resume_AI.html
+
       - name: Build the static export
         run: npm run build
 

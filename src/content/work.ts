@@ -20,6 +20,8 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/aakash98gupta/",
   appStore: "https://apps.apple.com/us/app/navica-budget-trip-planner/id6759998334",
   resume: "/resume/Aakash_Gupta_Resume_AI.html",
+  /** The printable version. Regenerated from the HTML at deploy time. */
+  resumePdf: "/resume/Aakash_Gupta_Resume_AI.pdf",
   codewalk: "https://www.codewalk.xyz/app",
 } as const;
 
