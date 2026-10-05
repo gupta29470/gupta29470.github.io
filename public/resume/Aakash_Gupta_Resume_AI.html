@@ -81,9 +81,8 @@
   <div class="subtitle">Indexing, RAG-based chat, and multi-agent code review over a repository, as one product</div>
   <ul>
     <li><b>Multi-agent review:</b> a diff is partitioned into batches and a pool of review agents works them in parallel (<b>4</b> concurrent), each batch returning findings plus its own coverage verdict, so a review with a failed batch reports as incomplete instead of passing. Findings are grounded against the checked-out revision before storage, then written back as PR comments and a check run.</li>
-    <li><b>RAG-based chat:</b> a question expands into 2–4 angles, then one shared gather pulls from a graph symbol walk and a batched vector search in a single embedding request; every candidate is scored <b>0–10</b> in one ranking call, which is the only step that drops evidence, and a failed ranking keeps everything. Answers cite the file and symbol.</li>
+    <li><b>RAG-based chat:</b> a question expands into 2 to 4 angles, then one shared gather pulls from a graph symbol walk and a batched vector search in a single embedding request; every candidate is scored <b>0 to 10</b> in one ranking call, which is the only step that drops evidence, and a failed ranking keeps everything. Answers cite the file and symbol.</li>
     <li><b>Indexing:</b> tree-sitter parses <b>14</b> languages into a symbol graph and parent-child chunks, embedded under an adaptive rate governor, then promoted by an atomic swap so readers only ever open a finished index and a retry resumes rather than re-embedding files it already paid for.</li>
-    <li><b>Underneath:</b> 202-Accepted queueing where the Postgres row is the job and a Redis stream is the doorbell, a reaper that repairs stalled work, BYOK inference behind a per-tenant circuit breaker, and an eval harness with deterministic scorers and variance-derived pass thresholds.</li>
   </ul>
   <p class="stack"><b>Stack:</b> Python, FastAPI, PostgreSQL, Redis, tree-sitter, ChromaDB, DuckDB, Next.js, Docker, Go edge gateway</p>
 </div>
@@ -106,21 +105,21 @@
 <div class="entry">
   <div class="row">
     <span class="title"><span class="org">ANKO GCC</span> · Mobile Engineer</span>
-    <span class="date">Oct 2024 – Present</span>
+    <span class="date">Oct 2024 to Present</span>
   </div>
   <div class="subtitle">Kmart &amp; Target Australia, retail app at <b>3.74M</b> active users</div>
   <ul>
-    <li><b>Performance engineering:</b> WebView memory <b>2GB → 400MB</b>; token clear <b>2,000ms → 10ms</b>; PLP first load <b>6–9s → 131ms</b>; PDP logged-in <b>3,054ms → 231ms</b></li>
+    <li><b>Performance engineering:</b> WebView memory <b>2GB → 400MB</b>; token clear <b>2,000ms → 10ms</b>; PLP first load <b>6 to 9s → 131ms</b>; PDP logged-in <b>3,054ms → 231ms</b></li>
     <li><b>Next-Gen Home Screen:</b> co-designed Contentful-driven architecture, shared BLoC patterns across <b>10+</b> modules: <b>38.9M</b> sessions, no major defects post-release</li>
     <li><b>Shoppable UGC (Tolstoy):</b> owned SDK integration and vendor rollout: <b>17M</b> events, <b>923K</b> users, <b>24%</b> conversion among interactors; shipped 1 month early</li>
-    <li><b>Connectivity and standards:</b> screen-aware offline handling with auto-recovery, <b>2–7s</b> faster reconnect; ran BLoC and code-quality brown-bags for <b>10–12</b> engineers</li>
+    <li><b>Connectivity and standards:</b> screen-aware offline handling with auto-recovery, <b>2 to 7s</b> faster reconnect; ran BLoC and code-quality brown-bags for <b>10 to 12</b> engineers</li>
   </ul>
 </div>
 
 <div class="entry">
   <div class="row">
     <span class="title"><span class="org">Explorex Technologies</span> · Frontend Developer (Flutter)</span>
-    <span class="date">Oct 2023 – Jul 2024</span>
+    <span class="date">Oct 2023 to Jul 2024</span>
   </div>
   <ul>
     <li>Built Digital Dining (home, menu, cart, pay-bill) from scratch, live at <b>300+ restaurants</b> in Bangalore</li>
@@ -130,7 +129,7 @@
 <div class="entry">
   <div class="row">
     <span class="title"><span class="org">Deciml</span> · Flutter Developer</span>
-    <span class="date">May 2023 – Aug 2023</span>
+    <span class="date">May 2023 to Aug 2023</span>
   </div>
   <ul>
     <li>Migrated FAQs/blogs to Firebase Remote Config; owned bug fixes, releases, and product-copy updates</li>
@@ -140,7 +139,7 @@
 <div class="entry">
   <div class="row">
     <span class="title"><span class="org">Threedots</span> · Product Engineer</span>
-    <span class="date">Sep 2021 – Mar 2023</span>
+    <span class="date">Sep 2021 to Mar 2023</span>
   </div>
   <div class="subtitle">Social investing platform, 100K+ users</div>
   <ul>
@@ -158,9 +157,9 @@
 
 <h2>Education</h2>
 <p class="education">
-  Thakur College of Engineering, B.E. IT (2018–2021)
+  Thakur College of Engineering, B.E. IT (2018 to 2021)
   <span class="sep"> · </span>
-  Government Polytechnic Mumbai, Diploma IT (2015–2018)
+  Government Polytechnic Mumbai, Diploma IT (2015 to 2018)
 </p>
 
 </body>
