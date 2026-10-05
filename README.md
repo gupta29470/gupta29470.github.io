@@ -61,10 +61,19 @@ copy of their own.
 
 ## The plates
 
-`src/components/plates.tsx` holds two hand-drawn SVG schematics, one per project. They are
-diagrams of real system components and real data paths, not fabricated screenshots. Each keeps
-a single red element marking the decision that made the project worth building: the ranking
-call that is the only filter in Codewalk's retrieval, and the barge-in path in VoiceFlow.
+`src/components/plates.tsx` holds two SVG schematics, one per project. They are diagrams of
+real system components and real data paths, not fabricated screenshots.
+
+- **Codewalk** is `codewalk-architecture.tsx`, the platform architecture drawn for the repo
+  (frontend, edge, API routes, four flows, shared state). It was converted from a standalone
+  HTML file so the fonts and tokens come from the site, the CSS is scoped under `.cw-arch`, and
+  it renders in the document instead of in an iframe.
+- **VoiceFlow** keeps its own drawing, with the barge-in path in red.
+
+The architecture diagram is 1780 x 1265 and dense, so it gets a wider frame than the simple
+plate (`WideFrame`, 1240px, 1500px at `lg`) and the sheet scrolls it sideways rather than
+shrinking it to a smudge. Plates that need that frame are excluded from the hover preview by
+`hasThumbnail`: a dense drawing in a 19rem box is a grey smudge and says nothing.
 
 ## Structure
 

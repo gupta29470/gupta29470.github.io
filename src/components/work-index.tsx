@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { Work } from "@/content/work";
-import { Plate } from "./plates";
+import { Plate, hasThumbnail } from "./plates";
 import { VideoEmbed } from "./video-embed";
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -253,13 +253,17 @@ function WorkSheet({
         </div>
 
         <div ref={body} onScroll={onScroll} className="flex-1 overflow-y-auto px-4 md:px-8">
-          {/* Cover */}
-          <div className="grid grid-cols-1 gap-8 border-t border-ink py-8 lg:grid-cols-12">
-            <div className="lg:col-span-5">
-              <p className="meta mb-3">{item.kind}</p>
-              <h3 className="display text-[13vw] md:text-[4.6rem]">{item.title}</h3>
+          {/* Cover. The title and byline sit in a narrow column and the plate
+              gets the full sheet width: a wide architecture diagram squeezed into
+              a third of the sheet is a picture of a diagram, not a diagram. */}
+          <div className="border-t border-ink py-8">
+            <div className="grid grid-cols-1 gap-x-8 gap-y-6 lg:grid-cols-12">
+              <div className="lg:col-span-5">
+                <p className="meta mb-3">{item.kind}</p>
+                <h3 className="display text-[13vw] md:text-[4.2rem]">{item.title}</h3>
+              </div>
 
-              <dl className="mt-8">
+              <dl className="self-end lg:col-span-6 lg:col-start-7">
                 <MetaRow term="Year" detail={item.year} />
                 {item.product ? (
                   <MetaRow term="Product" detail="codewalk.xyz/app" href={item.product} />
@@ -271,12 +275,13 @@ function WorkSheet({
             </div>
 
             {item.plate ? (
-              <div className="lg:col-span-7">
-                <div className="border border-ink bg-paper-deep p-4 md:p-6">
+              <div className="mt-8">
+                <div className="border border-ink bg-paper-deep p-3 md:p-5">
                   <Plate name={item.plate} />
                 </div>
                 <p className="meta mt-3">
-                  Drawn to show how the system works, not a screenshot.
+                  Drawn to show how the system works, not a screenshot. Drag the diagram sideways
+                  to read it.
                 </p>
               </div>
             ) : null}
@@ -383,7 +388,7 @@ export function WorkIndex({ items }: { items: Work[] }) {
       {/* Hovered plate, pinned beside the register. The section is the
           positioning context, so this must not be given a transform. */}
       {items.map((item, index) =>
-        item.plate ? (
+        item.plate && hasThumbnail(item.plate) ? (
           <div
             key={`preview-${item.slug}`}
             aria-hidden

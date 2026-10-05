@@ -12,10 +12,10 @@
  */
 
 import type { PlateName } from "@/content/work";
+import { CodewalkArchitecture } from "./codewalk-architecture";
 
 const SANS = "var(--font-archivo), system-ui, sans-serif";
 const MONO = "var(--font-plex-mono), ui-monospace, monospace";
-const SERIF = "var(--font-source-serif), Georgia, serif";
 
 const INK = "#141414";
 const RULE = "#d8d3c8";
@@ -35,7 +35,22 @@ const FRAME = "w-full overflow-x-auto";
 function Frame({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <div className={`${FRAME} ${className ?? ""}`}>
-      <div className="min-w-[600px]">{children}</div>
+      <div className="w-[600px] sm:w-[720px]">{children}</div>
+    </div>
+  );
+}
+
+/**
+ * A dense, wide drawing needs a much larger frame than a simple one. At a
+ * portrait aspect the diagram fits the sheet's width and is read by scrolling
+ * the page; at 1780 x 1265 it is small enough that squeezing it into the sheet
+ * would make every label unreadable. The frame is what decides that, so it is a
+ * property of the plate.
+ */
+function WideFrame({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="w-full overflow-x-auto">
+      <div className="w-[1240px] lg:w-[1500px]">{children}</div>
     </div>
   );
 }
@@ -90,124 +105,6 @@ function Label({
         {body}
       </text>
     </>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   01 — Codewalk: how a question becomes an answer.
-   ──────────────────────────────────────────────────────────────────────────── */
-
-type Step = { no: string; title: string; rows: string[]; note: string; y: number };
-
-function CodewalkPlate() {
-  const steps: Step[] = [
-    {
-      no: "01",
-      title: "Expand the question",
-      rows: ["2 to 4 angles, one call", "skipped if the planner already wrote an angle"],
-      note: "1 PROVIDER CALL",
-      y: 150,
-    },
-    {
-      no: "02",
-      title: "Gather evidence",
-      rows: ["symbol walk over the graph", "batched vector search, one embedding request"],
-      note: "NO MODEL CALLS",
-      y: 330,
-    },
-    {
-      no: "03",
-      title: "Rank, and that is the only filter",
-      rows: ["every candidate scored 0 to 10 in one call", "a failed ranking keeps everything"],
-      note: "1 PROVIDER CALL",
-      y: 510,
-    },
-    {
-      no: "04",
-      title: "Answer from the best few",
-      rows: ["with citations back to file and symbol"],
-      note: "1 PROVIDER CALL",
-      y: 690,
-    },
-  ];
-
-  return (
-    <svg
-      viewBox={`0 0 ${W} ${H}`}
-      className="w-full h-auto"
-      role="img"
-      aria-label="Codewalk retrieval diagram: a question is expanded into angles, evidence is gathered by a symbol walk and batched vector search with no model calls, every candidate is ranked once, and the answer is written from the best few. The ranking is the only filter, and a failed ranking keeps everything."
-    >
-      <PlateTitle title="Codewalk · question to answer" note="Fig. 01" />
-
-      {/* the pipeline rail, numbered top to bottom */}
-      <line x1={62} y1={140} x2={62} y2={752} stroke={INK} vectorEffect="non-scaling-stroke" />
-
-      {steps.map((step, index) => {
-        const next = steps[index + 1];
-        return (
-          <g key={step.no}>
-            <circle cx={62} cy={step.y + 30} r={9} fill={INK} />
-            <text
-              x={62}
-              y={step.y + 34}
-              textAnchor="middle"
-              fontFamily={MONO}
-              fontSize={9}
-              fill="#f5f2eb"
-            >
-              {index + 1}
-            </text>
-
-            <text x={96} y={step.y + 20} fontFamily={MONO} fontSize={10.5} fill={COOL}>
-              {step.no}
-            </text>
-            <text x={96} y={step.y + 52} fontFamily={SANS} fontSize={23} fontWeight={800} fill={INK} letterSpacing="-0.01em">
-              {step.title}
-            </text>
-            {step.rows.map((row, rowIndex) => (
-              <text
-                key={row}
-                x={96}
-                y={step.y + 78 + rowIndex * 21}
-                fontFamily={MONO}
-                fontSize={11.5}
-                fill={COOL}
-              >
-                {row}
-              </text>
-            ))}
-
-            <text
-              x={W - 44}
-              y={step.y + 34}
-              textAnchor="end"
-              fontFamily={MONO}
-              fontSize={11}
-              letterSpacing="0.14em"
-              fill={index === 2 ? SIGNAL : COOL}
-            >
-              {step.note}
-            </text>
-
-            {next ? (
-              <path
-                d={`M 62 ${step.y + 39} L 62 ${next.y + 30}`}
-                fill="none"
-                stroke={RULE}
-                strokeDasharray="4 4"
-                vectorEffect="non-scaling-stroke"
-              />
-            ) : null}
-          </g>
-        );
-      })}
-
-      <line x1={44} y1={752} x2={W - 44} y2={752} stroke={RULE} vectorEffect="non-scaling-stroke" />
-      <text x={44} y={774} fontFamily={SERIF} fontSize={15} fontStyle="italic" fill={INK}>
-        The ranking is the only step that drops evidence, and a failed ranking drops nothing.
-      </text>
-    </svg>
   );
 }
 
@@ -316,10 +213,26 @@ function VoiceFlowPlate() {
   );
 }
 
-export const plates: Record<PlateName, () => React.JSX.Element> = {
-  codewalk: CodewalkPlate,
+export const plates: Record<
+  PlateName,
+  React.ComponentType<{ className?: string; compact?: boolean }>
+> = {
+  // Codewalk's plate is the platform architecture diagram, drawn for the repo.
+  // The retrieval schematic it replaced is in the git history.
+  codewalk: CodewalkArchitecture,
   "voice-flow": VoiceFlowPlate,
 };
+
+const WIDE: PlateName[] = ["codewalk"];
+
+/**
+ * Whether this plate is worth showing as a hover thumbnail. A dense drawing
+ * scaled into a 19rem box is a grey smudge: it says "there is a diagram" and
+ * nothing else. Plates that need the wide frame are read in the sheet instead.
+ */
+export function hasThumbnail(name: PlateName): boolean {
+  return !WIDE.includes(name);
+}
 
 export function Plate({
   name,
@@ -334,14 +247,20 @@ export function Plate({
   const Render = plates[name];
 
   if (variant === "compact") {
+    // A preview is a signpost, not a reading surface: scale the drawing to the
+    // box rather than holding a readable width and spilling past the page.
     return (
       <div className={`overflow-hidden ${className ?? ""}`}>
-        <Render />
+        <Render compact />
       </div>
     );
   }
 
-  return (
+  return WIDE.includes(name) ? (
+    <WideFrame>
+      <Render />
+    </WideFrame>
+  ) : (
     <Frame className={className}>
       <Render />
     </Frame>
