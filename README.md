@@ -95,6 +95,10 @@ public/resume/            the AI resume, served as-is
 - A project sheet is Context, How it flows, Demo, Tech stack and tools. It used to carry seven
   sections including an outcome list and a per-project colophon; that was more detail than a
   reader wanted and it buried the two things that matter, the flow and the stack.
+- Each project row carries a Demo chip beside the row, and the row itself is a button. The row
+  opens the sheet at the cover; the chip opens the same sheet already scrolled to the video. The
+  sheet is keyed on `slug` plus the target, so choosing the chip on a project whose sheet was
+  already open still lands on the demo.
 - The demo player is a facade until clicked. Rendering the YouTube iframe immediately loads
   YouTube's player and cookies on every page view, which the colophon says we do not do. Clicking
   swaps in `youtube-nocookie.com` with autoplay.

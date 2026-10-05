@@ -19,37 +19,62 @@ function IndexRow({
 }: {
   item: Work;
   index: number;
-  onOpen: (index: number) => void;
+  onOpen: (index: number, at: "top" | "demo") => void;
   onPreview: (index: number | null) => void;
 }) {
   return (
     <li className="border-t border-ink last:border-b">
-      <button
-        type="button"
-        onClick={() => onOpen(index)}
-        onMouseEnter={() => onPreview(index)}
-        onMouseLeave={() => onPreview(null)}
-        onFocus={() => onPreview(index)}
-        onBlur={() => onPreview(null)}
-        className="group grid w-full grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-4 py-5 text-left focus:outline-none lg:grid-cols-[4rem_minmax(0,1fr)_minmax(0,15rem)_9rem_2rem] lg:py-6"
-      >
-        <span className="meta transition-colors duration-300 ease-opslag group-hover:text-signal">
-          {item.no}
-        </span>
-        <span className="font-sans text-[25px] font-black uppercase leading-[0.9] tracking-[-0.02em] transition-transform duration-500 ease-opslag group-hover:translate-x-2 sm:text-[30px] lg:text-[46px] lg:group-hover:translate-x-4">
-          {item.title}
-        </span>
-        <span className="hidden min-w-0 font-serif text-[14.5px] leading-snug text-ink/80 lg:block">
-          {item.summary}
-        </span>
-        <span className="meta lg:whitespace-nowrap">{item.year}</span>
-        <span
-          aria-hidden
-          className="hidden text-right font-sans text-[20px] font-black leading-none text-cool transition-colors duration-300 group-hover:text-signal lg:block"
+      <div className="flex items-stretch">
+        <button
+          type="button"
+          onClick={() => onOpen(index, "top")}
+          onMouseEnter={() => onPreview(index)}
+          onMouseLeave={() => onPreview(null)}
+          onFocus={() => onPreview(index)}
+          onBlur={() => onPreview(null)}
+          className="group grid w-full grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-4 py-5 text-left focus:outline-none lg:grid-cols-[4rem_minmax(0,1fr)_minmax(0,15rem)_9rem_2rem] lg:py-6"
         >
-          ↓
-        </span>
-      </button>
+          <span className="meta transition-colors duration-300 ease-opslag group-hover:text-signal">
+            {item.no}
+          </span>
+          <span className="font-sans text-[25px] font-black uppercase leading-[0.9] tracking-[-0.02em] transition-transform duration-500 ease-opslag group-hover:translate-x-2 sm:text-[30px] lg:text-[46px] lg:group-hover:translate-x-4">
+            {item.title}
+          </span>
+          <span className="hidden min-w-0 font-serif text-[14.5px] leading-snug text-ink/80 lg:block">
+            {item.summary}
+          </span>
+          <span className="meta lg:whitespace-nowrap">{item.year}</span>
+          <span
+            aria-hidden
+            className="hidden text-right font-sans text-[20px] font-black leading-none text-cool transition-colors duration-300 group-hover:text-signal lg:block"
+          >
+            ↓
+          </span>
+        </button>
+
+        {/* A demo is a thing people want to watch, not read about, so it gets
+            its own control. It opens the sheet already scrolled to the video.
+            The label stays visible on a phone: a bare triangle does not say
+            what it does. */}
+        {item.youtube ? (
+          <button
+            type="button"
+            onClick={() => onOpen(index, "demo")}
+            aria-label={`Play the ${item.title} demo`}
+            className="group my-auto mr-3 flex shrink-0 items-center gap-2 self-center border border-rule px-3 py-2 transition-colors duration-300 ease-opslag hover:border-ink hover:bg-ink lg:mr-0"
+          >
+            <span
+              aria-hidden
+              className="text-[10px] leading-none text-signal transition-colors duration-300 group-hover:text-paper"
+            >
+              ▶
+            </span>
+            <span className="meta !text-ink transition-colors duration-300 group-hover:!text-paper">
+              Demo
+            </span>
+          </button>
+        ) : null}
+      </div>
     </li>
   );
 }
@@ -75,9 +100,20 @@ function MetaRow({ term, detail, href }: { term: string; detail: string; href?: 
   );
 }
 
-function Section({ title, note, children }: { title: string; note?: string; children: React.ReactNode }) {
+function Section({
+  title,
+  note,
+  id,
+  children,
+}: {
+  title: string;
+  note?: string;
+  /** Set when something scrolls to this section by name. */
+  id?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section className="border-t border-ink py-8">
+    <section id={id} className="border-t border-ink py-8">
       <div className="mb-5 flex items-baseline justify-between gap-4">
         <h4 className="meta !text-ink">{title}</h4>
         {note ? <p className="meta hidden text-right sm:block">{note}</p> : null}
@@ -92,16 +128,31 @@ function WorkSheet({
   index,
   onClose,
   onNavigate,
+  initialScroll,
 }: {
   items: Work[];
   index: number;
   onClose: () => void;
   onNavigate: (index: number) => void;
+  /** Where the sheet should land when it opens. */
+  initialScroll?: "top" | "demo";
 }) {
   const body = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLDivElement>(null);
   const item = items[index];
   const next = (index + 1) % items.length;
+
+  // Opened from a row's play control, so land on the demo rather than the cover.
+  // Scrolling is done through the DOM on purpose: the progress bar is written
+  // the same way, and neither is React state that a frame needs to redraw.
+  useEffect(() => {
+    if (initialScroll !== "demo") return;
+    const node = body.current;
+    if (!node) return;
+    const target = node.querySelector<HTMLElement>("#demo");
+    // No demo: fall back to the end, which is where the video and the stack are.
+    node.scrollTop = target ? Math.max(0, target.offsetTop - node.offsetTop - 8) : node.scrollHeight;
+  }, [initialScroll]);
 
   // The sheet is remounted per project (see the `key` at the call site), so it
   // always opens at the top. No reset effect, and no setState in an effect.
@@ -237,7 +288,7 @@ function WorkSheet({
           </Section>
 
           {item.youtube ? (
-            <Section title="Demo">
+            <Section title="Demo" id="demo">
               <VideoEmbed
                 youtube={item.youtube}
                 title={item.youtubeCredit ?? `${item.title} demo`}
@@ -289,8 +340,14 @@ function WorkSheet({
 export function WorkIndex({ items }: { items: Work[] }) {
   const [preview, setPreview] = useState<number | null>(null);
   const [open, setOpen] = useState<number | null>(null);
+  const [initialScroll, setInitialScroll] = useState<"top" | "demo">("top");
 
   const close = useCallback(() => setOpen(null), []);
+
+  const openAt = useCallback((index: number, at: "top" | "demo") => {
+    setInitialScroll(at);
+    setOpen(index);
+  }, []);
 
   return (
     <>
@@ -300,7 +357,7 @@ export function WorkIndex({ items }: { items: Work[] }) {
             key={item.slug}
             item={item}
             index={index}
-            onOpen={setOpen}
+            onOpen={openAt}
             onPreview={setPreview}
           />
         ))}
@@ -328,11 +385,12 @@ export function WorkIndex({ items }: { items: Work[] }) {
 
       {open !== null ? (
         <WorkSheet
-          key={items[open].slug}
+          key={`${items[open].slug}-${initialScroll}`}
           items={items}
           index={open}
           onClose={close}
-          onNavigate={setOpen}
+          onNavigate={(i) => openAt(i, "top")}
+          initialScroll={initialScroll}
         />
       ) : null}
     </>
