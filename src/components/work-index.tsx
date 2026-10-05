@@ -4,10 +4,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { Work } from "@/content/work";
 import { Plate } from "./plates";
+import { VideoEmbed } from "./video-embed";
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   The register row. It has to look like something that opens, because the
-   previous version did not and nobody realised the rows were interactive.
+   The register row. It has to look like something that opens, because an
+   earlier version did not and nobody realised the rows were interactive.
    ──────────────────────────────────────────────────────────────────────────── */
 
 function IndexRow({
@@ -30,7 +31,7 @@ function IndexRow({
         onMouseLeave={() => onPreview(null)}
         onFocus={() => onPreview(index)}
         onBlur={() => onPreview(null)}
-        className="group grid w-full grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-4 py-5 text-left focus:outline-none lg:grid-cols-[4rem_minmax(0,1fr)_minmax(0,15rem)_11rem_2rem] lg:py-6"
+        className="group grid w-full grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-4 py-5 text-left focus:outline-none lg:grid-cols-[4rem_minmax(0,1fr)_minmax(0,15rem)_9rem_2rem] lg:py-6"
       >
         <span className="meta transition-colors duration-300 ease-opslag group-hover:text-signal">
           {item.no}
@@ -39,7 +40,7 @@ function IndexRow({
           {item.title}
         </span>
         <span className="hidden min-w-0 font-serif text-[14.5px] leading-snug text-ink/80 lg:block">
-          {item.line}
+          {item.summary}
         </span>
         <span className="meta lg:whitespace-nowrap">{item.year}</span>
         <span
@@ -57,16 +58,7 @@ function IndexRow({
    The bottom sheet. Vertical scroll, one project at a time.
    ──────────────────────────────────────────────────────────────────────────── */
 
-function MetaRow({
-  term,
-  detail,
-  href,
-}: {
-  term: string;
-  detail: string;
-  /** An address on the row is a link, not a label. */
-  href?: string;
-}) {
+function MetaRow({ term, detail, href }: { term: string; detail: string; href?: string }) {
   return (
     <div className="grid grid-cols-[7rem_1fr] gap-x-4 border-t border-rule py-3">
       <dt className="meta pt-[2px]">{term}</dt>
@@ -83,10 +75,13 @@ function MetaRow({
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, note, children }: { title: string; note?: string; children: React.ReactNode }) {
   return (
     <section className="border-t border-ink py-8">
-      <h4 className="meta mb-5 !text-ink">{title}</h4>
+      <div className="mb-5 flex items-baseline justify-between gap-4">
+        <h4 className="meta !text-ink">{title}</h4>
+        {note ? <p className="meta hidden text-right sm:block">{note}</p> : null}
+      </div>
       {children}
     </section>
   );
@@ -127,7 +122,7 @@ function WorkSheet({
   }, [onClose]);
 
   // Read progress is written straight to the DOM: it changes on every scroll
-  // frame, and re-rendering the sheet to move a 7px dot is the wrong trade.
+  // frame, and re-rendering the sheet to move a 2px line is the wrong trade.
   const onScroll = () => {
     const node = body.current;
     if (!node) return;
@@ -148,7 +143,7 @@ function WorkSheet({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={`${item.title}: ${item.subtitle}`}
+        aria-label={`${item.title}: ${item.kind}`}
         className="animate-sheet relative flex max-h-[92vh] w-full flex-col border-t border-ink bg-paper md:max-h-[88vh] md:max-w-6xl md:rounded-t-lg md:border-x"
       >
         <div className="shrink-0 border-b border-ink">
@@ -195,56 +190,16 @@ function WorkSheet({
             <div className="lg:col-span-5">
               <p className="meta mb-3">{item.kind}</p>
               <h3 className="display text-[13vw] md:text-[4.6rem]">{item.title}</h3>
-              <p className="mt-4 max-w-[36ch] font-serif text-[17px] leading-[1.55] text-ink/80">
-                {item.subtitle}
-              </p>
 
               <dl className="mt-8">
                 <MetaRow term="Year" detail={item.year} />
-                <MetaRow term="Fields" detail={item.fields.join(", ")} />
                 {item.product ? (
                   <MetaRow term="Product" detail="codewalk.xyz/app" href={item.product} />
                 ) : null}
                 {item.repo ? (
                   <MetaRow term="Code" detail="github.com/gupta29470" href={item.repo} />
                 ) : null}
-                {item.demo ? (
-                  <MetaRow term="Walkthrough" detail="Demo video" href={item.demo} />
-                ) : null}
               </dl>
-
-              <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
-                {item.product ? (
-                  <a
-                    href={item.product}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="border border-ink px-5 py-3 font-sans text-[13px] font-extrabold uppercase tracking-tight transition-colors duration-300 ease-opslag hover:bg-ink hover:text-paper"
-                  >
-                    Open Codewalk ↗
-                  </a>
-                ) : null}
-                {item.repo ? (
-                  <a
-                    href={item.repo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="meta self-center !text-ink transition-colors duration-300 hover:text-signal"
-                  >
-                    Repository ↗
-                  </a>
-                ) : null}
-                {item.demo ? (
-                  <a
-                    href={item.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="meta self-center !text-ink transition-colors duration-300 hover:text-signal"
-                  >
-                    Demo video ↗
-                  </a>
-                ) : null}
-              </div>
             </div>
 
             {item.plate ? (
@@ -260,85 +215,55 @@ function WorkSheet({
           </div>
 
           <Section title="Context">
-            <p className="max-w-[62ch] font-serif text-[18px] leading-[1.6] md:text-[20px]">
+            <p className="max-w-[64ch] font-serif text-[18px] leading-[1.6] md:text-[20px]">
               {item.context}
             </p>
           </Section>
 
-          <Section title="Approach">
-            <p className="max-w-[64ch] font-serif text-[17px] leading-[1.65]">{item.approach}</p>
-          </Section>
-
-          <Section title="What I built">
-            <ul className="max-w-[70ch]">
-              {item.build.map((entry, i) => (
+          <Section title="How it flows" note={`${item.flow.length} steps`}>
+            <ol>
+              {item.flow.map((step, i) => (
                 <li
-                  key={entry.head}
+                  key={step}
                   className="grid grid-cols-[2.5rem_1fr] gap-x-4 border-t border-rule py-5 first:border-t-0 first:pt-0"
                 >
                   <span className="meta pt-[5px] text-cool">{String(i + 1).padStart(2, "0")}</span>
-                  <div className="min-w-0">
-                    <h5 className="font-sans text-[17px] font-extrabold uppercase tracking-[-0.01em]">
-                      {entry.head}
-                    </h5>
-                    <p className="mt-2 font-serif text-[16px] leading-[1.65] text-ink/90">
-                      {entry.body}
-                    </p>
-                  </div>
+                  <p className="min-w-0 max-w-[68ch] font-serif text-[16px] leading-[1.7] text-ink/90">
+                    {step}
+                  </p>
                 </li>
               ))}
-            </ul>
+            </ol>
           </Section>
 
-          <Section title="Outcome">
-            <ul className="max-w-[64ch]">
-              {item.outcome.map((entry, i) => (
+          {item.youtube ? (
+            <Section title="Demo">
+              <VideoEmbed
+                youtube={item.youtube}
+                title={item.youtubeCredit ?? `${item.title} demo`}
+              />
+            </Section>
+          ) : null}
+
+          <Section title="Tech stack and tools">
+            <ul className="max-w-[68ch]">
+              {item.tech.map((line) => (
                 <li
-                  key={entry.claim}
-                  className="grid grid-cols-[2.5rem_1fr] gap-x-4 border-t border-rule py-4"
+                  key={line}
+                  className="grid grid-cols-[1.5rem_1fr] gap-x-3 border-t border-rule py-3"
                 >
-                  <span className="meta pt-[4px] text-cool">{String(i + 1).padStart(2, "0")}</span>
-                  <div className="min-w-0">
-                    <span className="font-serif text-[16.5px] leading-[1.55] md:text-[17px]">
-                      {entry.claim}
-                    </span>
-                    {entry.note ? (
-                      entry.href ? (
-                        <a
-                          href={entry.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="meta mt-1 block normal-case tracking-normal !text-ink underline decoration-rule underline-offset-4 transition-colors duration-300 hover:text-signal hover:decoration-signal"
-                        >
-                          {entry.note} ↗
-                        </a>
-                      ) : (
-                        <span className="meta mt-1 block normal-case tracking-normal">
-                          {entry.note}
-                        </span>
-                      )
-                    ) : null}
-                  </div>
+                  <span className="meta pt-[3px] text-signal" aria-hidden>
+                    ▸
+                  </span>
+                  <span className="min-w-0 font-serif text-[15.5px] leading-[1.6]">{line}</span>
                 </li>
               ))}
             </ul>
-          </Section>
-
-          <Section title="Colophon">
-            <dl className="max-w-[64ch]">
-              {item.colophon.map(([term, detail]) => (
-                <MetaRow key={term} term={term} detail={detail} />
-              ))}
-            </dl>
           </Section>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-ink py-8">
-            <button
-              type="button"
-              onClick={() => onNavigate(next)}
-              className="group text-left"
-            >
-              <span className="meta mb-2 block">{item.no === "01" ? "Read next" : "Read next"}</span>
+            <button type="button" onClick={() => onNavigate(next)} className="group text-left">
+              <span className="meta mb-2 block">Read next</span>
               <span className="block font-sans text-[30px] font-black uppercase leading-none tracking-[-0.02em] transition-transform duration-500 ease-opslag group-hover:translate-x-2">
                 {items[next].title}
               </span>

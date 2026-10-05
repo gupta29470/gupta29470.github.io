@@ -77,6 +77,7 @@ src/
 ├── components/
 │   ├── masthead.tsx      sticky nav + IST clock
 │   ├── work-index.tsx    the register and the bottom sheet
+│   ├── video-embed.tsx   click-to-play demo, loaded on demand
 │   ├── plates.tsx        two schematic diagrams
 │   ├── experience.tsx    work experience, behind <details>
 │   ├── capacities.tsx    what I can take on, with the proof beside it
@@ -91,6 +92,14 @@ public/resume/            the AI resume, served as-is
   five-panel horizontal spread, which read badly on a phone and hid the fact that a project
   had more than one panel. The sheet is remounted per project (via `key`), which is what resets
   its scroll position to the top without a reset effect.
+- A project sheet is Context, How it flows, Demo, Tech stack and tools. It used to carry seven
+  sections including an outcome list and a per-project colophon; that was more detail than a
+  reader wanted and it buried the two things that matter, the flow and the stack.
+- The demo player is a facade until clicked. Rendering the YouTube iframe immediately loads
+  YouTube's player and cookies on every page view, which the colophon says we do not do. Clicking
+  swaps in `youtube-nocookie.com` with autoplay.
+- The register line is `item.summary`, written by hand. It was briefly derived by splitting
+  `context` on its first full stop, which is the kind of parsing that breaks on the first edit.
 - The capabilities section is three statements, not a keyword list. An earlier version was four
   rows of comma-separated nouns, which failed for a specific reason: a list answers "what does he
   know", while the reader is asking "what would I hand him in week one". Every statement now
