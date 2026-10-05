@@ -23,57 +23,74 @@ function IndexRow({
   onPreview: (index: number | null) => void;
 }) {
   return (
-    <li className="border-t border-ink last:border-b">
-      <div className="flex items-stretch">
-        <button
-          type="button"
-          onClick={() => onOpen(index, "top")}
-          onMouseEnter={() => onPreview(index)}
-          onMouseLeave={() => onPreview(null)}
-          onFocus={() => onPreview(index)}
-          onBlur={() => onPreview(null)}
-          className="group grid w-full grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-4 py-5 text-left focus:outline-none lg:grid-cols-[4rem_minmax(0,1fr)_minmax(0,15rem)_9rem_2rem] lg:py-6"
-        >
-          <span className="meta transition-colors duration-300 ease-opslag group-hover:text-signal">
-            {item.no}
-          </span>
-          <span className="font-sans text-[25px] font-black uppercase leading-[0.9] tracking-[-0.02em] transition-transform duration-500 ease-opslag group-hover:translate-x-2 sm:text-[30px] lg:text-[46px] lg:group-hover:translate-x-4">
+    <li className="border-t border-ink last:border-b first:border-t-0">
+      {/*
+        The row is a div with a button role, not a button, because the Demo
+        control sits inside it and nesting a button inside a button is invalid
+        HTML that browsers resolve by dropping one of the two actions.
+
+        The chip is markup-adjacent to the title, so on a wide screen it lands in
+        the row's own column (items-baseline aligns to the title's baseline) and
+        on a phone it wraps onto its own line under the project name.
+      */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onOpen(index, "top")}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onOpen(index, "top");
+          }
+        }}
+        onMouseEnter={() => onPreview(index)}
+        onMouseLeave={() => onPreview(null)}
+        onFocus={() => onPreview(index)}
+        onBlur={() => onPreview(null)}
+        className="group grid w-full cursor-pointer grid-cols-[2.5rem_1fr] items-start gap-x-4 py-5 text-left focus:outline-none lg:grid-cols-[4rem_minmax(0,1fr)_minmax(0,15rem)_9rem] lg:py-6"
+      >
+        <span className="meta pt-1 transition-colors duration-300 ease-opslag group-hover:text-signal">
+          {item.no}
+        </span>
+
+        {/* The Demo control sits in the title's own cell, so it reads as being
+            attached to the project name: beside it on a wide screen, and under
+            it on a phone, which is where a thumb expects a call to action. */}
+        <span className="flex min-w-0 flex-col items-start gap-y-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4">
+          <span className="font-sans text-[25px] font-black uppercase leading-[0.9] tracking-[-0.02em] transition-transform duration-500 ease-opslag group-hover:translate-x-1 sm:text-[30px] lg:text-[46px] lg:group-hover:translate-x-3">
             {item.title}
           </span>
-          <span className="hidden min-w-0 font-serif text-[14.5px] leading-snug text-ink/80 lg:block">
-            {item.summary}
-          </span>
-          <span className="meta lg:whitespace-nowrap">{item.year}</span>
-          <span
-            aria-hidden
-            className="hidden text-right font-sans text-[20px] font-black leading-none text-cool transition-colors duration-300 group-hover:text-signal lg:block"
-          >
-            ↓
-          </span>
-        </button>
 
-        {/* A demo is a thing people want to watch, not read about, so it gets
-            its own control. It opens the sheet already scrolled to the video.
-            The label stays visible on a phone: a bare triangle does not say
-            what it does. */}
-        {item.youtube ? (
-          <button
-            type="button"
-            onClick={() => onOpen(index, "demo")}
-            aria-label={`Play the ${item.title} demo`}
-            className="group my-auto mr-3 flex shrink-0 items-center gap-2 self-center border border-rule px-3 py-2 transition-colors duration-300 ease-opslag hover:border-ink hover:bg-ink lg:mr-0"
-          >
-            <span
-              aria-hidden
-              className="text-[10px] leading-none text-signal transition-colors duration-300 group-hover:text-paper"
+          {item.youtube ? (
+            <button
+              type="button"
+              onClick={(event) => {
+                // Or the row's own click would open the sheet at the top instead.
+                event.stopPropagation();
+                onOpen(index, "demo");
+              }}
+              aria-label={`Play the ${item.title} demo`}
+              className="group/chip flex w-fit shrink-0 items-center gap-2 border border-ink px-3 py-2 transition-colors duration-300 ease-opslag hover:bg-ink"
             >
-              ▶
-            </span>
-            <span className="meta !text-ink transition-colors duration-300 group-hover:!text-paper">
-              Demo
-            </span>
-          </button>
-        ) : null}
+              <span
+                aria-hidden
+                className="text-[9px] leading-none text-signal transition-colors duration-300 group-hover/chip:text-paper"
+              >
+                ▶
+              </span>
+              <span className="meta !text-ink transition-colors duration-300 group-hover/chip:!text-paper">
+                Demo
+              </span>
+            </button>
+          ) : null}
+        </span>
+
+        <span className="hidden min-w-0 font-serif text-[14.5px] leading-snug text-ink/80 lg:col-start-3 lg:row-start-1 lg:block">
+          {item.summary}
+        </span>
+        <span className="meta lg:col-start-4 lg:row-start-1 lg:text-right lg:whitespace-nowrap">
+          {item.year}
+        </span>
       </div>
     </li>
   );

@@ -172,7 +172,7 @@ export const experience: ExperienceEntry[] = [
     summary: "Four product surfaces on a social investing platform, plus the onboarding that introduced them.",
     points: [
       "Built Trade Feeds (~50K users), Tag-Based Group Discovery (~24K), In-App Rating (~300K) and the current-affairs feed (~34K).",
-      "Built Leagues, Polls and Paper Trading games for 100K+ users.",
+      "Maintained and supported the Leagues, Polls and Paper Trading games used by 100K+ users.",
       "Created demo-gameplay onboarding: 63.5K interactions and a ~10% lift in new-user engagement.",
       "Refactored Groups to BLoC, cutting load time by ~50%.",
     ],
