@@ -20,9 +20,13 @@ export function CodewalkArchitecture({
   compact?: boolean;
 }) {
   return (
-    <div className={className}>
+    <div className={`cw-arch-pad${compact ? " is-compact" : ""} ${className ?? ""}`}>
       <style>{`
         .cw-arch { fill: var(--color-ink); }
+        /* The drawing keeps a gutter of its own so the pan runs edge to edge
+           while the content still breathes at both ends of the scroll. */
+        .cw-arch-pad { width: 1304px; padding: 0 32px; }
+        .cw-arch-pad.is-compact { width: 100%; padding: 0; }
         .cw-arch .layer { fill: #faf8f3; stroke: var(--color-ink); stroke-width: 1.5; }
         .cw-arch .sub   { fill: #f0ece3; stroke: #9c968a; stroke-width: 1; }
         .cw-arch .flow  { fill: #faf8f3; stroke: var(--color-ink); stroke-width: 1.25; }

@@ -252,7 +252,8 @@ function WorkSheet({
           </div>
         </div>
 
-        <div ref={body} onScroll={onScroll} className="flex-1 overflow-y-auto px-4 md:px-8">
+        <div ref={body} onScroll={onScroll} className="flex-1 overflow-y-auto">
+          <div className="px-4 md:px-8">
           {/* Cover. The title and byline sit in a narrow column and the plate
               gets the full sheet width: a wide architecture diagram squeezed into
               a third of the sheet is a picture of a diagram, not a diagram. */}
@@ -273,19 +274,25 @@ function WorkSheet({
                 ) : null}
               </dl>
             </div>
-
-            {item.plate ? (
-              <div className="mt-8">
-                <div className="border border-ink bg-paper-deep p-3 md:p-5">
-                  <Plate name={item.plate} />
-                </div>
-                <p className="meta mt-3">
-                  Drawn to show how the system works, not a screenshot. Drag the diagram sideways
-                  to read it.
-                </p>
-              </div>
-            ) : null}
           </div>
+          </div>
+
+          {/* The plate sits outside the sheet's padded block, so the pan surface
+              runs the full width of the sheet and no label is clipped by the
+              gutter. The caption gets its own padded line. */}
+          {item.plate ? (
+            <div className="bg-paper-deep py-4">
+              <Plate name={item.plate} />
+            </div>
+          ) : null}
+
+          <div className="px-4 md:px-8">
+          {item.plate ? (
+            <p className="meta pt-3">
+              Drawn to show how the system works, not a screenshot. Drag the diagram sideways
+              to read it.
+            </p>
+          ) : null}
 
           <Section title="Context">
             <p className="max-w-[64ch] font-serif text-[18px] leading-[1.6] md:text-[20px]">
@@ -348,6 +355,7 @@ function WorkSheet({
             >
               Close
             </button>
+          </div>
           </div>
         </div>
       </div>

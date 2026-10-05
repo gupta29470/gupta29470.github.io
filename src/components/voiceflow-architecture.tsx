@@ -22,9 +22,13 @@ export function VoiceFlowArchitecture({
   compact?: boolean;
 }) {
   return (
-    <div className={className}>
+    <div className={`vf-arch-pad${compact ? " is-compact" : ""} ${className ?? ""}`}>
       <style>{`
         .vf-arch { fill: var(--color-ink); }
+        /* Same gutter trick as the Codewalk plate: the pan reaches the sheet
+           edges, the drawing keeps 32px of air at each end. */
+        .vf-arch-pad { width: 1304px; padding: 0 32px; }
+        .vf-arch-pad.is-compact { width: 100%; padding: 0; }
         .vf-arch .box   { fill: #faf8f3; stroke: var(--color-ink); stroke-width: 1.5; }
         .vf-arch .inbox { fill: #f0ece3; stroke: #9c968a; stroke-width: 1; }
         .vf-arch .muted { fill: var(--color-cool); stroke: var(--color-cool); stroke-width: 1; }

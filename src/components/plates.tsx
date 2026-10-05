@@ -19,6 +19,11 @@ import { VoiceFlowArchitecture } from "./voiceflow-architecture";
  * A plate is drawn at a fixed readable width and panned horizontally inside its
  * own frame. Scaling a schematic down to phone width makes every label
  * illegible, and letting it size to the viewport pushes the page sideways.
+ *
+ * The sheet renders a wide plate outside its own padded block, so the pan
+ * surface reaches both edges of the sheet. Inside that padding a wide drawing
+ * can only pan within the padded column, which clips the first characters of
+ * every left-hand label.
  */
 const FRAME = "w-full overflow-x-auto";
 
@@ -38,11 +43,9 @@ function Frame({ children, className }: { children: React.ReactNode; className?:
  * property of the plate.
  */
 function WideFrame({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="w-full overflow-x-auto">
-      <div className="w-[1240px] lg:w-[1500px]">{children}</div>
-    </div>
-  );
+  // The width lives on the drawing's own padded wrapper, so this is only the
+  // scroll surface.
+  return <div className="w-full overflow-x-auto">{children}</div>;
 }
 
 export const plates: Record<

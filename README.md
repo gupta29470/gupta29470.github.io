@@ -74,10 +74,17 @@ real system components and real data paths, not fabricated screenshots.
   fights this site's paper register, so the system was redrawn here rather than copied. Facts
   come from that file and the repo README.
 
-The architecture diagram is 1780 x 1265 and dense, so it gets a wider frame than the simple
-plate (`WideFrame`, 1240px, 1500px at `lg`) and the sheet scrolls it sideways rather than
-shrinking it to a smudge. Plates that need that frame are excluded from the hover preview by
-`hasThumbnail`: a dense drawing in a 19rem box is a grey smudge and says nothing.
+Both diagrams are dense, so they get `WideFrame` and the sheet scrolls them sideways rather
+than shrinking them to a smudge. Plates that need that frame are excluded from the hover
+preview by `hasThumbnail`: a dense drawing in a 19rem box is a grey smudge and says nothing.
+
+**The pan surface has to reach the sheet's edges.** The sheet pads its content, and a wide plate
+rendered inside that padding can only pan within the padded column, which clips the first
+characters of every left-hand label. So the sheet is a padded block, then the plate, then the
+padding resumes: the plate sits between two padded blocks rather than inside one. Each drawing
+then carries its own gutter (`width: 1304px; padding: 0 32px` on `.cw-arch-pad` / `.vf-arch-pad`)
+so the scroll runs edge to edge while the content still breathes at both ends. Measured: 1px gap
+at each edge on desktop, which is the sheet border, and 0 on mobile.
 
 ## Structure
 
