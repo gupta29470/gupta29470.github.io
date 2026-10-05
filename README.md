@@ -68,7 +68,11 @@ real system components and real data paths, not fabricated screenshots.
   (frontend, edge, API routes, four flows, shared state). It was converted from a standalone
   HTML file so the fonts and tokens come from the site, the CSS is scoped under `.cw-arch`, and
   it renders in the document instead of in an iframe.
-- **VoiceFlow** keeps its own drawing, with the barge-in path in red.
+- **VoiceFlow** is `voiceflow-architecture.tsx`: the call path from the caller's phone through
+  Twilio Media Streams into the four pipeline stages, with the barge-in path in red. The project
+  ships its own `architecture.html`, but that file is a dark zinc-and-indigo Tailwind page that
+  fights this site's paper register, so the system was redrawn here rather than copied. Facts
+  come from that file and the repo README.
 
 The architecture diagram is 1780 x 1265 and dense, so it gets a wider frame than the simple
 plate (`WideFrame`, 1240px, 1500px at `lg`) and the sheet scrolls it sideways rather than
