@@ -155,15 +155,7 @@ export default function Home() {
                   rel="noreferrer"
                   className="meta !text-ink transition-colors duration-300 hover:text-signal"
                 >
-                  Résumé, AI ↗
-                </a>
-                <a
-                  href={profile.resumeMobile}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="meta !text-ink transition-colors duration-300 hover:text-signal"
-                >
-                  Résumé, mobile ↗
+                  Résumé ↗
                 </a>
               </div>
             </div>

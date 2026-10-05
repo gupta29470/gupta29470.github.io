@@ -31,19 +31,18 @@ export const metadata: Metadata = {
     template: "%s | Aakash Gupta",
   },
   description:
-    "Applied AI engineer building agents, retrieval and real-time voice systems. Four years of production engineering behind the models, including consumer apps at 1.4M monthly active users.",
+    "Applied AI engineer with five years of production engineering behind the models. Retrieval, code review agents and real-time voice, built to hold up in production.",
   keywords: [
     "applied AI engineer",
     "AI engineer",
-    "real-time voice AI",
     "retrieval augmented generation",
-    "LoRA fine-tuning",
+    "code review agent",
+    "real-time voice AI",
     "function calling",
-    "LLM latency",
+    "agent runtime",
     "Python",
     "FastAPI",
     "Flutter",
-    "SwiftUI",
   ],
   authors: [{ name: "Aakash Gupta" }],
   creator: "Aakash Gupta",
@@ -55,13 +54,13 @@ export const metadata: Metadata = {
     siteName: "Aakash Gupta",
     title: "Aakash Gupta | Applied AI Engineer",
     description:
-      "Agents, retrieval and real-time voice systems, with the production instinct of four years shipping consumer software at scale.",
+      "Retrieval, code review agents and real-time voice, with five years of production engineering behind them.",
   },
   twitter: {
     card: "summary",
     title: "Aakash Gupta | Applied AI Engineer",
     description:
-      "Agents, retrieval and real-time voice systems, with the production instinct of four years shipping consumer software at scale.",
+      "Retrieval, code review agents and real-time voice, with five years of production engineering behind them.",
   },
   robots: {
     index: true,

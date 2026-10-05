@@ -20,7 +20,6 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/aakash98gupta/",
   appStore: "https://apps.apple.com/us/app/navica-budget-trip-planner/id6759998334",
   resume: "/resume/Aakash_Gupta_Resume_AI.html",
-  resumeMobile: "/resume/Aakash_Gupta_Resume_Flutter.html",
   codewalk: "https://www.codewalk.xyz/app",
 } as const;
 
@@ -105,7 +104,7 @@ export const work: Work[] = [
       },
       {
         head: "Knowing when a change made it worse",
-        body: "There is an evaluation harness with versioned suites, deterministic scorers over saved trajectories, an LLM judge calibrated against hand labels, and a regression gate whose thresholds come from measured variance rather than taste. Retrieval quality is measured on a fixed baseline so a change to chunking or ranking can be shown to help or hurt.",
+        body: "There is an evaluation harness with versioned suites, deterministic scorers over saved trajectories, and an LLM judge calibrated against hand labels. The pass thresholds come from measured variance rather than taste, so retrieval quality can be shown to have improved or regressed on a fixed baseline after a change to chunking or ranking.",
       },
     ],
     outcome: [
@@ -138,7 +137,7 @@ export const work: Work[] = [
       ["Parsing", "tree-sitter, 14 languages, parent and child chunks"],
       ["Retrieval", "Symbol walk plus batched vector search, one ranking call"],
       ["Models", "Bring your own key, 13 providers behind one gateway"],
-      ["Evaluation", "Versioned suites, deterministic scorers, LLM judge, regression gate"],
+      ["Evaluation", "Versioned suites, deterministic scorers, an LLM judge, variance derived pass thresholds"],
       ["Status", "Pre-deploy. The product runs; nothing here claims a number it has not measured."],
     ],
     plate: "codewalk",
@@ -284,19 +283,25 @@ export const skills: SkillGroup[] = [
     no: "01",
     name: "AI and GenAI",
     items:
-      "Retrieval augmented generation, semantic and graph retrieval, embeddings, chunking strategy, query rewriting, ranking, function calling, agent runtimes, multi-agent review, parameter efficient fine-tuning (LoRA), prompt and context design, latency engineering for streaming systems, evaluation harnesses and regression gates",
+      "Retrieval augmented generation, grounding answers in citations, semantic and graph retrieval, chunking strategy, ranking, function calling, agent loops and tools, batching work across parallel calls, prompt and context design",
   },
   {
     no: "02",
     name: "Backend and real time",
     items:
-      "Python, FastAPI, async services, WebSockets and SSE, queue and worker patterns, job state machines, idempotency, retries with backoff, circuit breakers, Postgres, Redis, DuckDB, SQLite, Docker, CI",
+      "Python, FastAPI, async services, WebSockets and SSE, job state machines, idempotency, retries with backoff, circuit breakers, Postgres, Redis, DuckDB, SQLite, Docker, CI",
   },
   {
     no: "03",
     name: "Product surfaces",
     items:
       "Flutter and Dart, SwiftUI and Swift, Firebase, offline first behaviour, performance profiling, release management, CMS driven interfaces",
+  },
+  {
+    no: "04",
+    name: "Measurement",
+    items:
+      "Per stage latency and percentile reporting, token and cost accounting, evaluation suites with deterministic scorers, an LLM judge calibrated against hand labels, and variance derived thresholds for deciding whether a change helped",
   },
 ];
 

@@ -49,7 +49,7 @@ approach / outcome, a colophon on every project — not of anyone's copy, conten
 provenance rules at the top, and a "deliberately not claimed" list at the bottom:
 
 - Every number was read out of the repository or the resume, not remembered.
-- **The phone number is deliberately absent**, although it is on both resume files.
+- **The phone number is deliberately absent**, although it is on the resume file.
 - **The two native iOS projects are deliberately absent**, by request.
 - Three claims from the AI resume are **left off rather than softened**, because they do not
   survive checking against `codewalk-prod`: the MCP server and its 39 tools (no MCP module
@@ -82,7 +82,7 @@ src/
 │   ├── skills.tsx        the skills register
 │   └── ist-clock.tsx     client clock, filled on mount
 └── content/work.ts       every word and figure on the site
-public/resume/            the two resumes, served as-is
+public/resume/            the AI resume, served as-is
 ```
 
 ## Notes for whoever works on this next
