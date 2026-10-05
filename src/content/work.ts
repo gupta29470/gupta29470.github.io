@@ -276,32 +276,32 @@ export const experience: ExperienceEntry[] = [
  * it was. The project write-ups name the specifics, so this is the index to them
  * and claims nothing the projects do not already support.
  */
-export type SkillGroup = { no: string; name: string; items: string };
+export type Capacity = {
+  no: string;
+  name: string;
+  body: string;
+  /** Where the claim is proven. A statement without one does not belong here. */
+  proof: string;
+};
 
-export const skills: SkillGroup[] = [
+export const capacities: Capacity[] = [
   {
     no: "01",
-    name: "AI and GenAI",
-    items:
-      "Retrieval augmented generation, grounding answers in citations, semantic and graph retrieval, chunking strategy, ranking, function calling, agent loops and tools, batching work across parallel calls, prompt and context design",
+    name: "Retrieval and review agents",
+    body: "I build the gather, rank and answer loop, and I can tell you which step drops evidence and what the system does when that step fails. On Codewalk that meant one shared gather for both retrieval paths, a ranking call that is the only filter, and review coverage derived from per-batch verdicts so an incomplete review cannot look like a clean one.",
+    proof: "Codewalk",
   },
   {
     no: "02",
-    name: "Backend and real time",
-    items:
-      "Python, FastAPI, async services, WebSockets and SSE, job state machines, idempotency, retries with backoff, circuit breakers, Postgres, Redis, DuckDB, SQLite, Docker, CI",
+    name: "Real-time voice",
+    body: "A cascaded streaming pipeline over a live phone call: speech to text, a model with tool calling, speech back out, with barge-in so a caller can interrupt mid-sentence. Per-turn latency is reported at average and p95, because the tail is what the person on the call actually feels.",
+    proof: "VoiceFlow",
   },
   {
     no: "03",
-    name: "Product surfaces",
-    items:
-      "Flutter and Dart, SwiftUI and Swift, Firebase, offline first behaviour, performance profiling, release management, CMS driven interfaces",
-  },
-  {
-    no: "04",
-    name: "Measurement",
-    items:
-      "Per stage latency and percentile reporting, token and cost accounting, evaluation suites with deterministic scorers, an LLM judge calibrated against hand labels, and variance derived thresholds for deciding whether a change helped",
+    name: "Production instinct",
+    body: "Five years of shipping software to real users, which is where the habits come from. I measure before optimising, assume the connection will drop, handle the failure state, and expect somebody to open it on a bad network. Flutter, SwiftUI and Firebase are part of that background, not the direction.",
+    proof: "ANKO GCC · retail app, 3.74M users",
   },
 ];
 

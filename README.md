@@ -79,7 +79,7 @@ src/
 │   ├── work-index.tsx    the register and the bottom sheet
 │   ├── plates.tsx        two schematic diagrams
 │   ├── experience.tsx    work experience, behind <details>
-│   ├── skills.tsx        the skills register
+│   ├── capacities.tsx    what I can take on, with the proof beside it
 │   └── ist-clock.tsx     client clock, filled on mount
 └── content/work.ts       every word and figure on the site
 public/resume/            the AI resume, served as-is
@@ -91,6 +91,10 @@ public/resume/            the AI resume, served as-is
   five-panel horizontal spread, which read badly on a phone and hid the fact that a project
   had more than one panel. The sheet is remounted per project (via `key`), which is what resets
   its scroll position to the top without a reset effect.
+- The capabilities section is three statements, not a keyword list. An earlier version was four
+  rows of comma-separated nouns, which failed for a specific reason: a list answers "what does he
+  know", while the reader is asking "what would I hand him in week one". Every statement now
+  carries the project that proves it, and a statement with no proof does not belong in the list.
 - Outcome notes can carry an `href`; when they do they render as links. The product URL was
   plain text in an outcome note for a while, which is exactly the kind of thing nobody notices
   until a reader cannot click it.
