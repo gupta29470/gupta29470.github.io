@@ -11,6 +11,21 @@ npm run typecheck
 npm run lint
 ```
 
+## The resume PDF
+
+`public/resume/Aakash_Gupta_Resume_AI.pdf` is **generated**, not committed: Chrome stamps generation
+metadata into a PDF, so the bytes differ on every run and git would report the file modified after
+each deploy.
+
+- Locally: `npm run dev` and `npm run build` both run `scripts/html-to-pdf.sh` first via the
+  `predev` / `prebuild` hooks.
+- In CI: the deploy workflow installs a shell-only headless browser and runs the same script.
+- Manually: `./scripts/html-to-pdf.sh public/resume/Aakash_Gupta_Resume_AI.html`
+
+The runner has no SF Pro Text, so its PDF falls back to Liberation Sans and DejaVu Sans. Same single
+A4 page, different bytes. The runner's output is treated as canonical, because that is the file a
+visitor actually downloads.
+
 ## Deployment
 
 Published to GitHub Pages at **https://gupta29470.github.io/** as a personal project, so the

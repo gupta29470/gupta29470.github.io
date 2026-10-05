@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "dev": "next dev",
     "lint": "eslint",
+    "prebuild": "./scripts/html-to-pdf.sh public/resume/Aakash_Gupta_Resume_AI.html || true",
+    "predev": "./scripts/html-to-pdf.sh public/resume/Aakash_Gupta_Resume_AI.html || true",
+    "start": "next start",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

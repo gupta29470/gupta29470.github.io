@@ -1,5 +1,10 @@
 node_modules/
 .next/
+# Generated from the resume HTML by scripts/html-to-pdf.sh, at dev time and in
+# the deploy workflow. Not committed: Chrome stamps generation metadata into the
+# PDF, so the bytes differ on every run and git would report it modified after
+# each deploy.
+public/resume/*.pdf
 out/
 build/
 .env*.local
