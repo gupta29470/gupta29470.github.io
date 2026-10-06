@@ -11,8 +11,6 @@
   --color-paper-deep: #ece7dc;
   --color-ink: #141414;
   --color-signal: #d93b2b;
-  /* Semantic only: green means live, and is used nowhere else on the page. */
-  --color-live: #1f8a4c;
   --color-cool: #8a8781;
   --color-rule: #d8d3c8;
 

@@ -104,17 +104,10 @@ export default function Home() {
 
         {/* ── The index ───────────────────────────────────────────────────── */}
         <section className="relative px-4 py-8 md:px-8 md:py-12">
-          <div className="mb-4 flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
+          <div className="mb-4 flex items-end justify-between">
             <p className="meta">Selected work</p>
-            <p className="meta flex items-center gap-2">
-              <span aria-hidden className="inline-block h-[7px] w-[7px] rounded-full bg-live" />
-              <span className="text-live">
-                {work.filter((item) => item.status.kind === "live").length} of {work.length} live
-              </span>
-              <span aria-hidden>·</span>
-              <span>
-                {work[0].no} to {work[work.length - 1].no}
-              </span>
+            <p className="meta">
+              {work[0].no} to {work[work.length - 1].no}
             </p>
           </div>
           <WorkIndex items={work} />
