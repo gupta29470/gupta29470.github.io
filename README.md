@@ -85,6 +85,22 @@ provenance rules at the top, and a "deliberately not claimed" list at the bottom
 Anyone adding a project should add it there; the sections render from the data and hold no
 copy of their own.
 
+## Live status and crawlers
+
+Each project carries a `status`: `live` when a public URL answers, `code` when only the repository
+and a demo exist. The register shows a filled green dot for live and a hollow one otherwise, and the
+list header counts them ("1 of 2 live"). The only green on the site is this dot and its label, with
+`--color-live`; red stays the editorial accent.
+
+**Statuses are set by hand after checking the URL**, because the alternative is inventing them.
+`voice-flow.vercel.app` resolves with a 200 but serves a "This page could not be found" page from an
+unrelated project called VoiceFlow, so VoiceFlow is `code`, not `live`. Do not promote it without a
+URL that actually loads the app.
+
+`src/app/sitemap.ts` and `src/app/robots.ts` generate `sitemap.xml` and `robots.txt` at build time.
+Only the home page is listed; the resume files are downloads, not pages, and are deliberately absent.
+`lastModified` is the build time, which for a static export is the honest answer.
+
 ## The plates
 
 `src/components/plates.tsx` holds two SVG schematics, one per project. They are diagrams of

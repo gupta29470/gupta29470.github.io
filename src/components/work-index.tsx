@@ -88,8 +88,20 @@ function IndexRow({
         <span className="hidden min-w-0 font-serif text-[14.5px] leading-snug text-ink/80 lg:col-start-3 lg:row-start-1 lg:block">
           {item.summary}
         </span>
-        <span className="meta lg:col-start-4 lg:row-start-1 lg:text-right lg:whitespace-nowrap">
-          {item.year}
+        <span className="meta flex items-center gap-2 lg:col-start-4 lg:row-start-1 lg:justify-end lg:whitespace-nowrap">
+          {/* Filled dot: something answers at a URL. Hollow: the code and a demo
+              exist, but nothing is deployed. */}
+          <span
+            aria-hidden
+            className={`inline-block h-[7px] w-[7px] shrink-0 rounded-full ${
+              item.status.kind === "live" ? "bg-live" : "border border-cool"
+            }`}
+          />
+          <span className={item.status.kind === "live" ? "text-live" : undefined}>
+            {item.status.label}
+          </span>
+          <span aria-hidden>·</span>
+          <span>{item.year}</span>
         </span>
       </div>
     </li>
@@ -276,6 +288,7 @@ function WorkSheet({
 
               <dl className="self-end lg:col-span-6 lg:col-start-7">
                 <MetaRow term="Year" detail={item.year} />
+                <MetaRow term="Status" detail={item.status.label} />
                 {item.product ? (
                   <MetaRow term="Product" detail="codewalk.xyz/app" href={item.product} />
                 ) : null}

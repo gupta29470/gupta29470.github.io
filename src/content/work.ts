@@ -43,6 +43,8 @@ export type Work = {
   summary: string;
   /** The two or three things this project is actually about. */
   focus: string[];
+  /** Deployment state. "live" means a public URL answers, verified by hand. */
+  status: { kind: "live" | "code"; label: string };
   kind: string;
   year: string;
   /** Where the thing lives. Absent when there is no public link. */
@@ -66,6 +68,8 @@ export const work: Work[] = [
     title: "Codewalk",
     summary: "Indexes a repository, answers questions with citations, and reviews diffs.",
     focus: ["Multi-agent review", "RAG-based chat", "Indexing"],
+    // Verified 2026-10-05: https://www.codewalk.xyz/app answers 200.
+    status: { kind: "live", label: "Live" },
     kind: "Code intelligence platform",
     year: "2026",
     product: "https://www.codewalk.xyz/app",
@@ -95,6 +99,9 @@ export const work: Work[] = [
     title: "VoiceFlow",
     summary: "A phone agent that listens, answers out loud, and yields when interrupted.",
     focus: ["Real-time voice", "Streaming and barge-in"],
+    // No public deployment. voice-flow.vercel.app resolves but belongs to
+    // another project, so it is deliberately not linked or counted as live.
+    status: { kind: "code", label: "Repo + demo" },
     kind: "Real-time voice agents",
     year: "2025",
     repo: "https://github.com/gupta29470/voice-flow",
