@@ -76,7 +76,7 @@ export const work: Work[] = [
       "Chat. A question is expanded into a few angles, gathered from the graph and the vectors through one shared gather, ranked in a single call, and answered from the best few with citations back to the file and symbol.",
       "Review. A diff is split into batches and a pool of review agents works them in parallel, each batch returning findings plus its own verdict on how much of that batch it covered. Findings are grounded against the checked-out revision before they are stored, then written back to the pull request.",
     ],
-    youtube: "bqmJnED7GMk",
+    youtube: "WANW43ciXhY",
     youtubeCredit: "Codewalk walkthrough",
     tech: [
       "Python, FastAPI, SQLAlchemy 2.0, Pydantic v2",
