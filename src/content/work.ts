@@ -111,7 +111,7 @@ export const work: Work[] = [
       "Python, FastAPI, WebSockets",
       "Telephony: Twilio Media Streams, 8 kHz mu-law end to end",
       "Speech in: Deepgram streaming STT, endpointing for turn detection",
-      "Reasoning: Grok (xAI) and Kimi, with function calling",
+      "Reasoning: LLM with function calling",
       "Speech out: Cartesia and ElevenLabs, sentence-level streaming",
       "Storage: SQLite for workflow runs and captures",
       "Dashboard: Next.js with per-turn latency, average and p95, deployed on Render and Vercel",

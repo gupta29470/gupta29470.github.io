@@ -48,7 +48,7 @@ export function VoiceFlowArchitecture({
         className="vf-arch block h-auto w-full"
         style={compact ? undefined : { minWidth: "1200px" }}
         role="img"
-        aria-label="VoiceFlow call path: the caller's phone over PSTN to Twilio Media Streams, into a FastAPI WebSocket where four stages run per call, the media stream gateway, Deepgram streaming speech to text, the Grok or Kimi agent with tools, and Cartesia or ElevenLabs speech back down the line. A red dashed barge-in path cancels the in-flight speech and clears Twilio's buffer when the caller interrupts. Metrics and SQLite storage sit alongside the pipeline, and the Next.js dashboard starts calls and reads the results back."
+        aria-label="VoiceFlow call path: the caller's phone over PSTN to Twilio Media Streams, into a FastAPI WebSocket where four stages run per call, the media stream gateway, Deepgram streaming speech to text, the LLM agent with tools, and Cartesia or ElevenLabs speech back down the line. A red dashed barge-in path cancels the in-flight speech and clears Twilio's buffer when the caller interrupts. Metrics and SQLite storage sit alongside the pipeline, and the Next.js dashboard starts calls and reads the results back."
       >
         <defs>
           <marker
@@ -169,7 +169,7 @@ export function VoiceFlowArchitecture({
           Agent
         </text>
         <text className="ts" x={64} y={532}>
-          Grok (xAI), Kimi as fallback
+          LLM with function calling
         </text>
         <text className="s" x={312} y={532}>
           streams sentences so speech starts before the answer ends
