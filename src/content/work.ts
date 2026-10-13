@@ -204,20 +204,61 @@ export const capacities: Capacity[] = [
   {
     no: "01",
     name: "Retrieval and review agents",
-    body: "I build the gather, rank and answer loop, and I can tell you which step drops evidence and what the system does when that step fails. On Codewalk that meant one shared gather for both retrieval paths, a ranking call that is the only filter, and review coverage derived from per-batch verdicts so an incomplete review cannot look like a clean one.",
+    body: "I build the gather, rank and answer loop, and I can name the step that drops evidence when it fails. On Codewalk: one shared gather, one ranking call, and coverage from per-batch verdicts — an incomplete review cannot look clean.",
     proof: "Codewalk",
   },
   {
     no: "02",
     name: "Real-time voice",
-    body: "A cascaded streaming pipeline over a live phone call: speech to text, a model with tool calling, speech back out, with barge-in so a caller can interrupt mid-sentence. Per-turn latency is reported at average and p95, because the tail is what the person on the call actually feels.",
+    body: "A cascaded pipeline over a live call: speech to text, a model with tool calls, speech back out, and barge-in so a caller can interrupt mid-sentence. Average and p95 per turn, because the tail is what the caller feels.",
     proof: "VoiceFlow",
   },
   {
     no: "03",
     name: "Production instinct",
-    body: "Five years of shipping software to real users, which is where the habits come from. I measure before optimising, assume the connection will drop, handle the failure state, and expect somebody to open it on a bad network. Flutter, SwiftUI and Firebase are part of that background, not the direction.",
+    body: "Five years shipping to real users, which is where the habits come from. I measure before optimising, assume the connection drops, and expect someone to open it on a bad network. Flutter and SwiftUI are the background, not the direction.",
     proof: "ANKO GCC · retail app, 3.74M users",
+  },
+];
+
+/**
+ * The vocabulary, in one place.
+ *
+ * The three statements above answer "what would you hand me"; this answers the
+ * narrower "what is it built with", which a visitor should not have to open a
+ * project sheet to find. It is the resume's skills block with the tail trimmed
+ * — the same five groups, kept shorter here because the page has room to say
+ * less than the one-pager does. Every term also appears in one of the project
+ * `tech` lists, so it claims nothing they do not already support.
+ */
+export type Skill = {
+  group: string;
+  items: string;
+};
+
+export const skills: Skill[] = [
+  {
+    group: "Retrieval & indexing",
+    items:
+      "RAG, parent-child chunking, embeddings, symbol graphs, ranking, query expansion, ChromaDB, DuckDB",
+  },
+  {
+    group: "Agents & evaluation",
+    items:
+      "Agent runtimes, function calling, tool design, MCP, evaluation harnesses, LLM judge and calibration",
+  },
+  {
+    group: "Real-time AI",
+    items: "WebSockets and SSE, speech to text and TTS, endpointing, barge-in, per-stage latency",
+  },
+  {
+    group: "Backend & infra",
+    items:
+      "Python, FastAPI, async services, PostgreSQL, Redis, SQLite, Docker, CI/CD, circuit breakers",
+  },
+  {
+    group: "Mobile & languages",
+    items: "Flutter (BLoC), SwiftUI, Firebase · Python, Dart, Swift, SQL",
   },
 ];
 

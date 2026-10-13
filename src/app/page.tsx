@@ -2,6 +2,7 @@ import { Capacities } from "@/components/capacities";
 import { Experience } from "@/components/experience";
 import { Masthead } from "@/components/masthead";
 import { Resume } from "@/components/resume";
+import { Skills } from "@/components/skills";
 import { WorkIndex } from "@/components/work-index";
 import { experience, facts, profile, work } from "@/content/work";
 
@@ -126,6 +127,7 @@ export default function Home() {
           <SectionHead id="skills" title="What I can take on" note="Each one, with the work that proves it" />
           <div className="mt-4">
             <Capacities />
+            <Skills />
           </div>
         </section>
 
