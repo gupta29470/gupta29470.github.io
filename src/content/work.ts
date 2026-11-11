@@ -79,9 +79,10 @@ export const work: Work[] = [
     youtubeCredit: "MediRead walkthrough",
     tech: [
       "Flutter and Dart app, Kotlin bridge",
-      "Python ingestion: PyMuPDF, OCR routing, structured extraction",
+      "Python ingestion: PyMuPDF, OCR routing, structured extraction, page/bbox provenance",
       "Deterministic test, value, unit and printed-range verification",
       "Versioned knowledge package with sources and evidence",
+      "Model work: PyTorch, PEFT/LoRA, Transformers; Qwen3 0.6B fine-tune, FP32/INT8 LiteRT-LM export, on-device inference",
       "Offline on Android; no network calls carry report data",
     ],
     plate: null,
@@ -253,7 +254,7 @@ export const capacities: Capacity[] = [
  * The three statements above answer "what would you hand me"; this answers the
  * narrower "what is it built with", which a visitor should not have to open a
  * project sheet to find. It is the resume's skills block with the tail trimmed
- * — the same six groups, kept shorter here because the page has room to say
+ * — the same seven groups, kept shorter here because the page has room to say
  * less than the one-pager does. Every term also appears in one of the project
  * `tech` lists, so it claims nothing they do not already support.
  */
@@ -266,29 +267,32 @@ export const skills: Skill[] = [
   {
     group: "Retrieval & indexing",
     items:
-      "RAG, parent-child chunking, embeddings, symbol graphs, ranking, query expansion, ChromaDB, DuckDB",
+      "RAG, parent-child chunking, embeddings, symbol graphs, ranking, citations, ChromaDB, DuckDB",
   },
   {
     group: "Agents & evaluation",
-    items:
-      "Agent runtimes, function calling, tool design, MCP, evaluation harnesses, LLM judge and calibration",
+    items: "Agent runtimes, function calling, MCP, evaluation harnesses, LLM judge",
   },
   {
     group: "Real-time AI",
     items: "WebSockets and SSE, speech to text and TTS, endpointing, barge-in, per-stage latency",
   },
   {
-    group: "On-device",
-    items: "PDF/OCR extraction, deterministic verification, offline-first Android",
+    group: "Model & on-device",
+    items:
+      "PyTorch, PEFT/LoRA, Transformers, LiteRT-LM, FP32/INT8 export, on-device inference",
+  },
+  {
+    group: "Ingestion & OCR",
+    items: "PyMuPDF, OCR routing, structured extraction, provenance",
   },
   {
     group: "Backend & infra",
-    items:
-      "Python, FastAPI, async services, PostgreSQL, Redis, SQLite, Docker, CI/CD, circuit breakers",
+    items: "Python, FastAPI, PostgreSQL, Redis, Docker, CI/CD, retries with backoff",
   },
   {
     group: "Mobile & languages",
-    items: "Flutter (BLoC), SwiftUI, Firebase, Kotlin · Python, Dart, Swift, SQL",
+    items: "Flutter (BLoC), SwiftUI, Firebase, Kotlin · Python, Dart, SQL",
   },
 ];
 
