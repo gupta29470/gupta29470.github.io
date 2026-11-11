@@ -22,7 +22,14 @@ export function VideoEmbed({
   const [playing, setPlaying] = useState(false);
 
   const watchUrl = `https://www.youtube.com/watch?v=${youtube}`;
+  // Some uploads (vertical or short) never get a maxres thumbnail, so the
+  // facade steps down to the sizes YouTube does serve instead of showing a
+  // broken image behind the play button.
   const thumb = `https://i.ytimg.com/vi/${youtube}/maxresdefault.jpg`;
+  const thumbFallbacks = [
+    `https://i.ytimg.com/vi/${youtube}/sddefault.jpg`,
+    `https://i.ytimg.com/vi/${youtube}/hqdefault.jpg`,
+  ];
 
   return (
     <figure>
@@ -50,6 +57,14 @@ export function VideoEmbed({
               width={1280}
               height={720}
               loading="lazy"
+              onError={(event) => {
+                const image = event.currentTarget;
+                const step = Number(image.dataset.fallback ?? "0");
+                if (step < thumbFallbacks.length) {
+                  image.dataset.fallback = String(step + 1);
+                  image.src = thumbFallbacks[step];
+                }
+              }}
               className="h-full w-full object-cover opacity-90 transition-opacity duration-300 group-hover:opacity-100"
             />
             <span className="absolute inset-0 flex items-center justify-center">

@@ -82,6 +82,8 @@ export const work: Work[] = [
       "22-case behavioural contract with exact-token comparison and refusal checks",
       "Resumable downloads with SHA-256 verification; offline inference; one active model at a time",
     ],
+    youtube: "vYLK22f-utg",
+    youtubeCredit: "MediRead demo",
     plate: null,
   },
   {
