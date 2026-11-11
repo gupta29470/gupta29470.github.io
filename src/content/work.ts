@@ -253,7 +253,7 @@ export const capacities: Capacity[] = [
  * The three statements above answer "what would you hand me"; this answers the
  * narrower "what is it built with", which a visitor should not have to open a
  * project sheet to find. It is the resume's skills block with the tail trimmed
- * — the same five groups, kept shorter here because the page has room to say
+ * — the same six groups, kept shorter here because the page has room to say
  * less than the one-pager does. Every term also appears in one of the project
  * `tech` lists, so it claims nothing they do not already support.
  */
@@ -278,13 +278,17 @@ export const skills: Skill[] = [
     items: "WebSockets and SSE, speech to text and TTS, endpointing, barge-in, per-stage latency",
   },
   {
+    group: "On-device",
+    items: "PDF/OCR extraction, deterministic verification, offline-first Android",
+  },
+  {
     group: "Backend & infra",
     items:
       "Python, FastAPI, async services, PostgreSQL, Redis, SQLite, Docker, CI/CD, circuit breakers",
   },
   {
     group: "Mobile & languages",
-    items: "Flutter (BLoC), SwiftUI, Firebase · Python, Dart, Swift, SQL",
+    items: "Flutter (BLoC), SwiftUI, Firebase, Kotlin · Python, Dart, Swift, SQL",
   },
 ];
 
