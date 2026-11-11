@@ -7,7 +7,7 @@
  *    remembered. Where a claim could not be verified it was left out rather
  *    than softened. See the "not claimed" note at the bottom of this file.
  *  - The phone number on both resumes is deliberately absent.
- *  - MediRead is first: it is the newest work and the closest to on-device AI.
+ *  - MediRead is first: it is the newest work.
  */
 
 export const profile = {
@@ -27,7 +27,7 @@ export const profile = {
 /** Small, checkable facts set under the name. No adjectives. */
 export const facts: { label: string; value: string }[] = [
   { label: "Experience", value: "5 years building production software" },
-  { label: "Now", value: "Applied AI: on-device models, retrieval, voice" },
+  { label: "Now", value: "Applied AI: retrieval, voice, developer tools" },
   { label: "Looking for", value: "AI engineering roles" },
   { label: "Based in", value: "India" },
 ];
@@ -63,27 +63,27 @@ export const work: Work[] = [
     no: "01",
     slug: "mediread",
     title: "MediRead",
-    summary: "Explains a lab report on the phone, and lets the model rewrite only what the deterministic engine approved.",
-    focus: ["On-device LLM", "Deterministic gating", "Model evaluation"],
-    kind: "On-device medical explainer",
+    summary: "Reads a lab report on the phone, verifies every value against the page it came from, and explains it from a versioned knowledge base.",
+    focus: ["On-device extraction", "Deterministic verification", "Explanation gating"],
+    kind: "On-device lab-report explainer",
     year: "2026",
     repo: "https://github.com/gupta29470/mediread",
     context:
-      "A lab report is dense, and the explanation a person gets is usually either generic or produced somewhere else. MediRead reads a PDF or photo on the device, extracts each result with its page and bounding box, and explains it from a versioned knowledge base. The medical logic is deliberately not the model's job: test identification, numbers, units, ranges and per-field permissions stay in code, and a 0.6B model may only rewrite text that has already been approved. It is a self-directed learning project, not a clinical tool.",
+      "A lab report is dense, and the explanation a person gets is usually either generic or produced somewhere else. MediRead reads a PDF or photo on the device, extracts each result with its page and bounding box, verifies the value, unit and printed range in code, and explains it from a versioned knowledge base. Ambiguous or unknown results are flagged with a reason rather than guessed. It is a self-directed learning project, not a clinical tool.",
     flow: [
       "Ingest. Digital pages keep their embedded text; scanned and hybrid pages go through OCR. Every result keeps its page and box, and uncertain fields are flagged rather than guessed.",
-      "Explain and gate. The deterministic engine composes the explanation and decides what may be shown and what may reach the model. Ambiguous, unknown, draft and blocked results never invoke inference.",
-      "Rewrite and check. The on-device model rewrites only the approved sections. A validator rejects invented numbers or sources, dropped values or ranges, and any diagnosis, treatment or urgency claim, then falls back to the deterministic text.",
-    ],
-    tech: [
-      "Flutter and Dart app, Kotlin bridge, LiteRT-LM 0.19.1 on Android",
-      "Python ingestion: PyMuPDF, OCR routing, structured extraction",
-      "Qwen3 0.6B LoRA fine-tune; FP32 (2.39 GB) and dynamic INT8 (613.7 MB) exports",
-      "22-case behavioural contract with exact-token comparison and refusal checks",
-      "Resumable downloads with SHA-256 verification; offline inference; one active model at a time",
+      "Verify. The deterministic engine identifies the test, parses the value and unit, and compares against the range printed on the report. Nothing is calculated on the person's behalf.",
+      "Explain. An approved knowledge entry produces the explanation; ambiguous, unknown, draft and blocked results are withheld with the reason, and every claim keeps its source.",
     ],
     youtube: "vYLK22f-utg",
-    youtubeCredit: "MediRead demo",
+    youtubeCredit: "MediRead walkthrough",
+    tech: [
+      "Flutter and Dart app, Kotlin bridge",
+      "Python ingestion: PyMuPDF, OCR routing, structured extraction",
+      "Deterministic test, value, unit and printed-range verification",
+      "Versioned knowledge package with sources and evidence",
+      "Offline on Android; no network calls carry report data",
+    ],
     plate: null,
   },
   {
@@ -276,11 +276,6 @@ export const skills: Skill[] = [
   {
     group: "Real-time AI",
     items: "WebSockets and SSE, speech to text and TTS, endpointing, barge-in, per-stage latency",
-  },
-  {
-    group: "On-device AI",
-    items:
-      "LiteRT-LM, LoRA fine-tuning, FP32/INT8 trade-offs, offline inference, model evaluation",
   },
   {
     group: "Backend & infra",

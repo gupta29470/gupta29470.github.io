@@ -212,14 +212,13 @@
         <span class="detail">· <a href="https://youtu.be/vYLK22f-utg">demo video</a></span></span>
     </div>
     <ul>
-      <li><b>Deterministic gate:</b> Numbers, units, ranges and per-field permissions stay in code; the model
-        rewrites only approved text, and a validator rejects invented numbers or sources, dropped values or ranges,
-        and diagnosis or urgency claims.</li>
-      <li><b>Models and app:</b> LoRA-tuned Qwen3-0.6B exported FP32 (2.39 GB), 22/22 on a 22-case contract; a tuned
-        INT8 candidate scored 21/22 and was not shipped. The app ships the official 613.7 MB INT8 base with SHA-256
-        downloads and one active model; 10 reports / 66 pages &rarr; 325 results (292 verified, 33 flagged).</li>
+      <li><b>On-device extraction:</b> PDF and photo import with embedded-text/OCR routing; every result keeps its
+        page and bounding box. Evaluated on 10 reports / 66 pages &rarr; 325 results (292 verified, 33 flagged).</li>
+      <li><b>Deterministic safety:</b> Numbers, units, printed ranges and per-field permissions are checked in code;
+        ambiguous, unknown and blocked results are flagged and withheld, never guessed, and explanations are gated
+        to approved knowledge.</li>
     </ul>
-    <p class="stack"><b>Stack:</b> Flutter, Dart, Kotlin, LiteRT-LM, Python, PyTorch, PEFT/LoRA, OCR</p>
+    <p class="stack"><b>Stack:</b> Flutter, Dart, Kotlin, Python, PyMuPDF, OCR</p>
   </div>
 
   <div class="entry">
@@ -318,7 +317,7 @@
         endpointing, cancellation and barge-in, per-stage latency instrumentation</span></p>
     <p><b>Backend &amp; infra:</b> <span>Python, FastAPI, async services, PostgreSQL, Redis, SQLite, Docker, CI/CD,
         idempotency, retries with backoff, circuit breakers</span></p>
-    <p><b>Mobile &amp; languages:</b> <span>Flutter (BLoC), SwiftUI, Firebase, LiteRT-LM</span> &nbsp;·&nbsp; <span>Python, Dart,
+    <p><b>Mobile &amp; languages:</b> <span>Flutter (BLoC), SwiftUI, Firebase</span> &nbsp;·&nbsp; <span>Python, Dart,
         Swift, Kotlin, SQL</span></p>
   </div>
 
