@@ -254,7 +254,7 @@ export const capacities: Capacity[] = [
  * The three statements above answer "what would you hand me"; this answers the
  * narrower "what is it built with", which a visitor should not have to open a
  * project sheet to find. It is the resume's skills block with the tail trimmed
- * — the same seven groups, kept shorter here because the page has room to say
+ * — the same six groups, kept shorter here because the page has room to say
  * less than the one-pager does. Every term also appears in one of the project
  * `tech` lists, so it claims nothing they do not already support.
  */
@@ -281,10 +281,6 @@ export const skills: Skill[] = [
     group: "Model & on-device",
     items:
       "PyTorch, PEFT/LoRA, Transformers, LiteRT-LM, FP32/INT8 export, on-device inference",
-  },
-  {
-    group: "Ingestion & OCR",
-    items: "PyMuPDF, OCR routing, structured extraction, provenance",
   },
   {
     group: "Backend & infra",
