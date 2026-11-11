@@ -7,8 +7,7 @@
  *    remembered. Where a claim could not be verified it was left out rather
  *    than softened. See the "not claimed" note at the bottom of this file.
  *  - The phone number on both resumes is deliberately absent.
- *  - Codewalk is first, because it is the project closest to the work being
- *    applied for.
+ *  - MediRead is first: it is the newest work and the closest to on-device AI.
  */
 
 export const profile = {
@@ -28,7 +27,7 @@ export const profile = {
 /** Small, checkable facts set under the name. No adjectives. */
 export const facts: { label: string; value: string }[] = [
   { label: "Experience", value: "5 years building production software" },
-  { label: "Now", value: "Applied AI: voice agents, retrieval, review" },
+  { label: "Now", value: "Applied AI: on-device models, retrieval, voice" },
   { label: "Looking for", value: "AI engineering roles" },
   { label: "Based in", value: "India" },
 ];
@@ -62,6 +61,31 @@ export type Work = {
 export const work: Work[] = [
   {
     no: "01",
+    slug: "mediread",
+    title: "MediRead",
+    summary: "Explains a lab report on the phone, and lets the model rewrite only what the deterministic engine approved.",
+    focus: ["On-device LLM", "Deterministic gating", "Model evaluation"],
+    kind: "On-device medical explainer",
+    year: "2026",
+    repo: "https://github.com/gupta29470/mediread",
+    context:
+      "A lab report is dense, and the explanation a person gets is usually either generic or produced somewhere else. MediRead reads a PDF or photo on the device, extracts each result with its page and bounding box, and explains it from a versioned knowledge base. The medical logic is deliberately not the model's job: test identification, numbers, units, ranges and per-field permissions stay in code, and a 0.6B model may only rewrite text that has already been approved. It is a self-directed learning project, not a clinical tool.",
+    flow: [
+      "Ingest. Digital pages keep their embedded text; scanned and hybrid pages go through OCR. Every result keeps its page and box, and uncertain fields are flagged rather than guessed.",
+      "Explain and gate. The deterministic engine composes the explanation and decides what may be shown and what may reach the model. Ambiguous, unknown, draft and blocked results never invoke inference.",
+      "Rewrite and check. The on-device model rewrites only the approved sections. A validator rejects invented numbers or sources, dropped values or ranges, and any diagnosis, treatment or urgency claim, then falls back to the deterministic text.",
+    ],
+    tech: [
+      "Flutter and Dart app, Kotlin bridge, LiteRT-LM 0.19.1 on Android",
+      "Python ingestion: PyMuPDF, OCR routing, structured extraction",
+      "Qwen3 0.6B LoRA fine-tune; FP32 (2.39 GB) and dynamic INT8 (613.7 MB) exports",
+      "22-case behavioural contract with exact-token comparison and refusal checks",
+      "Resumable downloads with SHA-256 verification; offline inference; one active model at a time",
+    ],
+    plate: null,
+  },
+  {
+    no: "02",
     slug: "codewalk",
     title: "Codewalk",
     summary: "Indexes a repository, answers questions with citations, and reviews diffs.",
@@ -90,7 +114,7 @@ export const work: Work[] = [
     plate: "codewalk",
   },
   {
-    no: "02",
+    no: "03",
     slug: "voice-flow",
     title: "VoiceFlow",
     summary: "A phone agent that listens, answers out loud, and yields when interrupted.",
@@ -250,6 +274,11 @@ export const skills: Skill[] = [
   {
     group: "Real-time AI",
     items: "WebSockets and SSE, speech to text and TTS, endpointing, barge-in, per-stage latency",
+  },
+  {
+    group: "On-device AI",
+    items:
+      "LiteRT-LM, LoRA fine-tuning, FP32/INT8 trade-offs, offline inference, model evaluation",
   },
   {
     group: "Backend & infra",

@@ -27,10 +27,10 @@
 
     body {
       font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      font-size: 8.8pt;
-      line-height: 1.28;
+      font-size: 8.6pt;
+      line-height: 1.26;
       color: var(--ink);
-      padding: 10mm 13mm 2mm;
+      padding: 7mm 13mm 1mm;
       background: #fff;
     }
 
@@ -73,7 +73,7 @@
       color: var(--accent);
       border-bottom: 1px solid var(--rule);
       padding-bottom: 2px;
-      margin: 14px 0 7px;
+      margin: 6px 0 3px;
     }
 
     .summary {
@@ -82,7 +82,7 @@
 
     /* ── entries ──────────────────────────── */
     .entry {
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     .entry:last-child {
@@ -137,7 +137,7 @@
     li {
       padding-left: 10px;
       position: relative;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
       color: #33333f;
     }
 
@@ -205,6 +205,22 @@
   </header>
 
   <h2>Applied AI: what I build now</h2>
+
+  <div class="entry">
+    <div class="row">
+      <span class="title"><a href="https://github.com/gupta29470/mediread">MediRead&nbsp;↗</a>: On-Device Lab-Report Explainer
+        <span class="detail">· <a href="https://github.com/gupta29470/mediread#demos">demo</a></span></span>
+    </div>
+    <ul>
+      <li><b>Deterministic gate:</b> Numbers, units, ranges and per-field permissions stay in code; the model rewrites
+        only approved text, and a validator rejects invented numbers or sources, dropped ranges and diagnosis or
+        urgency claims.</li>
+      <li><b>Models and app:</b> LoRA-tuned Qwen3-0.6B, exported FP32 (2.39 GB) and INT8 (613.7 MB); FP32 matched the
+        HF reference 22/22 on a 22-case contract, INT8 21/22 and was rejected. Flutter app with SHA-256 downloads and
+        one active model; 10 reports / 66 pages &rarr; 325 results (292 verified, 33 flagged).</li>
+    </ul>
+    <p class="stack"><b>Stack:</b> Flutter, Dart, Kotlin, LiteRT-LM, Python, PyTorch, PEFT/LoRA, OCR</p>
+  </div>
 
   <div class="entry">
     <div class="row">
@@ -302,13 +318,12 @@
         endpointing, cancellation and barge-in, per-stage latency instrumentation</span></p>
     <p><b>Backend &amp; infra:</b> <span>Python, FastAPI, async services, PostgreSQL, Redis, SQLite, Docker, CI/CD,
         idempotency, retries with backoff, circuit breakers</span></p>
-    <p><b>Mobile &amp; languages:</b> <span>Flutter (BLoC), SwiftUI, Firebase</span> &nbsp;·&nbsp; <span>Python, Dart,
-        Swift, SQL</span></p>
+    <p><b>Mobile &amp; languages:</b> <span>Flutter (BLoC), SwiftUI, Firebase, LiteRT-LM</span> &nbsp;·&nbsp; <span>Python, Dart,
+        Swift, Kotlin, SQL</span></p>
   </div>
 
-  <h2>Education</h2>
-  <p class="education">
-    Thakur College of Engineering, B.E. IT (2018 to 2021)
+  <p class="education" style="margin-top:2px">
+    <b>Education:</b> Thakur College of Engineering, B.E. IT (2018 to 2021)
     <span class="sep"> · </span>
     Government Polytechnic Mumbai, Diploma IT (2015 to 2018)
   </p>
